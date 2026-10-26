@@ -34,3 +34,12 @@ Update.args = {
     window.alert("Submit was clicked with data: " + JSON.stringify(data));
   },
 };
+
+export const UpdateSolved = Template.bind({});
+UpdateSolved.args = {
+  ...Update.args,
+  initialContents: {
+    ...Update.args.initialContents,
+    solved: true,
+  },
+};
