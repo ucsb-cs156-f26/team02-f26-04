@@ -46,7 +46,7 @@ describe("HelpRequestIndexPage tests", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Create")).toBeInTheDocument();
     expect(screen.getByText("Edit")).toBeInTheDocument();
-        expect(screen.getByRole("link", { name: "Create" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Create" })).toHaveAttribute(
       "href",
       "/helprequest/create",
     );

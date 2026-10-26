@@ -192,17 +192,14 @@ describe("AppNavbar tests", () => {
     expect(link).toBeInTheDocument();
     expect(link.getAttribute("href")).toBe("/restaurants");
   });
-    test("renders the HelpRequest link correctly", async () => {
+  test("renders the HelpRequest link correctly", async () => {
     const currentUser = currentUserFixtures.userOnly;
     const systemInfo = systemInfoFixtures.showingBoth;
 
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <AppNavbar
-            currentUser={currentUser}
-            systemInfo={systemInfo}
-          />
+          <AppNavbar currentUser={currentUser} systemInfo={systemInfo} />
         </MemoryRouter>
       </QueryClientProvider>,
     );
