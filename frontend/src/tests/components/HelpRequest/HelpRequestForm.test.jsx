@@ -53,6 +53,8 @@ describe("HelpRequestForm tests", () => {
       expect(screen.getByText(label)).toBeInTheDocument();
     });
 
+    expect(screen.getByTestId(`${testId}-solved`)).toBeInTheDocument();
+
     expect(screen.queryByTestId(`${testId}-id`)).not.toBeInTheDocument();
   });
 
