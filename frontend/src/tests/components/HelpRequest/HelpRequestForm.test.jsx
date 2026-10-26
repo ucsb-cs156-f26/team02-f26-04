@@ -73,9 +73,9 @@ describe("HelpRequestForm tests", () => {
     expect(screen.getByTestId(`${testId}-teamId`)).toHaveValue(
       oneHelpRequest.teamId,
     );
-    expect(
-      screen.getByTestId(`${testId}-tableOrBreakoutRoom`),
-    ).toHaveValue(oneHelpRequest.tableOrBreakoutRoom);
+    expect(screen.getByTestId(`${testId}-tableOrBreakoutRoom`)).toHaveValue(
+      oneHelpRequest.tableOrBreakoutRoom,
+    );
     expect(screen.getByTestId(`${testId}-explanation`)).toHaveValue(
       oneHelpRequest.explanation,
     );
