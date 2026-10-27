@@ -283,21 +283,6 @@ function App() {
         <>
           <Route
             exact
-            path="/helprequest/edit/:id"
-            element={<HelpRequestEditPage />}
-          />
-          <Route
-            exact
-            path="/placeholder/edit/:id"
-            element={<PlaceholderEditPage />}
-          />
-          <Route
-            exact
-            path="/placeholder/create"
-            element={<PlaceholderCreatePage />}
-          />
-          <Route
-            exact
             path="/diningcommonsmenuitem/create"
             element={<UCSBDiningCommonsMenuItemCreatePage />}
           />
