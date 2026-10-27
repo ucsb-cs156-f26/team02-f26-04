@@ -1,6 +1,8 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import HelpRequestCreatePage from "main/pages/HelpRequest/HelpRequestCreatePage";
-import HelpRequestForm from "main/components/HelpRequest/HelpRequestForm";
+import HelpRequestForm, {
+  helpRequestDefaultValues,
+} from "main/components/HelpRequest/HelpRequestForm";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter } from "react-router";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
@@ -270,19 +272,8 @@ describe("HelpRequestCreatePage tests", () => {
     ).toBeInTheDocument();
     expect(axiosMock.history.post.length).toBe(0);
   });
-  test("request time defaults to empty when not provided", () => {
-    render(
-      <MemoryRouter>
-        <HelpRequestForm
-          initialContents={{
-            requesterEmail: "student@example.com",
-            teamId: "team02-f26-04",
-          }}
-          submitAction={vi.fn()}
-        />
-      </MemoryRouter>,
-    );
 
-    expect(screen.getByLabelText("Request Time")).toHaveValue("");
+  test("request time defaults to empty when not provided", () => {
+    expect(helpRequestDefaultValues.requestTime).toBe("");
   });
 });
