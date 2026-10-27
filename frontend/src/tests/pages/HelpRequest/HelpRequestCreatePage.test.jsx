@@ -241,33 +241,48 @@ describe("HelpRequestCreatePage tests", () => {
     expect(mockNavigate).toHaveBeenCalledWith(-1);
   });
   test.each([
-  ["prefix user@example.com", "prefix user@example.com"],
-  ["user@example.com suffix", "user@example.com suffix"],
-])("rejects malformed email %s", async (_label, email) => {
-  renderPage();
+    ["prefix user@example.com", "prefix user@example.com"],
+    ["user@example.com suffix", "user@example.com suffix"],
+  ])("rejects malformed email %s", async (_label, email) => {
+    renderPage();
 
-  fireEvent.change(await screen.findByLabelText("Requester Email"), {
-    target: { value: email },
-  });
+    fireEvent.change(await screen.findByLabelText("Requester Email"), {
+      target: { value: email },
+    });
 
-  fireEvent.change(screen.getByLabelText("Team ID"), {
-    target: { value: "team02-f26-04" },
-  });
-  fireEvent.change(screen.getByLabelText("Table or Breakout Room"), {
-    target: { value: "Library 2510" },
-  });
-  fireEvent.change(screen.getByLabelText("Request Time"), {
-    target: { value: "2026-10-26T14:30" },
-  });
-  fireEvent.change(screen.getByLabelText("Explanation"), {
-    target: { value: "Need help" },
-  });
+    fireEvent.change(screen.getByLabelText("Team ID"), {
+      target: { value: "team02-f26-04" },
+    });
+    fireEvent.change(screen.getByLabelText("Table or Breakout Room"), {
+      target: { value: "Library 2510" },
+    });
+    fireEvent.change(screen.getByLabelText("Request Time"), {
+      target: { value: "2026-10-26T14:30" },
+    });
+    fireEvent.change(screen.getByLabelText("Explanation"), {
+      target: { value: "Need help" },
+    });
 
-  fireEvent.submit(screen.getByLabelText("Requester Email").closest("form"));
+    fireEvent.submit(screen.getByLabelText("Requester Email").closest("form"));
 
-  expect(
-    await screen.findByText("Enter a valid email address."),
-  ).toBeInTheDocument();
-  expect(axiosMock.history.post.length).toBe(0);
-});
+    expect(
+      await screen.findByText("Enter a valid email address."),
+    ).toBeInTheDocument();
+    expect(axiosMock.history.post.length).toBe(0);
+  });
+  test("request time defaults to empty when not provided", () => {
+    render(
+      <MemoryRouter>
+        <HelpRequestForm
+          initialContents={{
+            requesterEmail: "student@example.com",
+            teamId: "team02-f26-04",
+          }}
+          submitAction={vi.fn()}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByLabelText("Request Time")).toHaveValue("");
+  });
 });
