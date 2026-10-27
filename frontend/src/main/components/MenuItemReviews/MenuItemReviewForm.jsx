@@ -28,6 +28,8 @@ function MenuItemReviewForm({
   const navigate = useNavigate();
 
   const testIdPrefix = "MenuItemReviewForm";
+  const isodate_regex =
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/;
 
   return (
     <Form onSubmit={handleSubmit(submitAction)}>
@@ -65,12 +67,12 @@ function MenuItemReviewForm({
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label htmlFor="reviwerEmail">Reviewer Email</Form.Label>
+        <Form.Label htmlFor="reviewerEmail">Reviewer Email</Form.Label>
         <Form.Control
           id="reviwerEmail"
           type="text"
           isInvalid={Boolean(errors.reviwerEmail)}
-          {...register("reviwerEmail", {
+          {...register("reviewerEmail", {
             required: "Reviewer Email is required.",
             maxLength: {
               value: 256,
@@ -79,7 +81,7 @@ function MenuItemReviewForm({
           })}
         />
         <Form.Control.Feedback type="invalid">
-          {errors.reviwerEmail?.message}
+          {errors.reviewerEmail?.message}
         </Form.Control.Feedback>
       </Form.Group>
 
@@ -105,12 +107,15 @@ function MenuItemReviewForm({
           type="datetime-local"
           isInvalid={Boolean(errors.dateReviewed)}
           {...register("dateReviewed", {
-            required: true,
-            pattern: isodate_regex,
+            required: "Date Reviewed is required.",
+            pattern: {
+              value: isodate_regex,
+              message: "Date Reviewed must be in ISO format.",
+            },
           })}
         />
         <Form.Control.Feedback type="invalid">
-          {errors.dateReviewed && "Date Reviewed is required. "}
+          {errors.dateReviewed?.message}
         </Form.Control.Feedback>
       </Form.Group>
 
