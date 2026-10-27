@@ -1,33 +1,43 @@
-const restaurantFixtures = {
-  oneRestaurant: [
+const articleFixtures = {
+  oneArticle: [
     {
       id: 1,
-      name: "The Habit",
-      description: "Burgers and Fries",
+      title: "<article> HTML article contents element",
+      url: "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/article",
+      explanation: "An article about the HTML <article> element",
+      email: "austin_li@ucsb.edu",
+      dateAdded: new Date()
     },
   ],
 
-  threeRestaurants: [
+  threeArticles: [
     {
       id: 2,
-      name: "Cristino's Bakery",
-      description:
-        "This place is takeout only.  It may look mostly like a bakery with Mexican pastries, but it also has amazing burritos and tacos",
+      title: "Article I",
+      url: "https://www.law.cornell.edu/constitution/articlei",
+      explanation: "An article about the legislative branch",
+      email: "austin_li@ucsb.edu",
+      dateAdded: new Date()
     },
 
     {
       id: 3,
-      name: "Freebirds",
-      description: "Burrito joint, and iconic Isla Vista location",
+      title: "Using Articles",
+      url: "https://owl.purdue.edu/owl/general_writing/grammar/using_articles.html",
+      explanation: "An article about using articles in english grammar",
+      email: "austin_li@ucsb.edu",
+      dateAdded: new Date()
     },
 
     {
       id: 4,
-      name: "Ca' Dario Cucina Italiana",
-      description:
-        "White tablecloth Italian restaurant, with great pasta and pizza",
+      title: "Data Centers and Water Consumption",
+      url: "https://www.eesi.org/articles/view/data-centers-and-water-consumption",
+      explanation: "An article about water consumption of data centers",
+      email: "austin_li@ucsb.edu",
+      dateAdded: new Date()
     },
   ],
 };
 
-export { restaurantFixtures };
+export { articleFixtures };
