@@ -1,15 +1,16 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import HelpRequestCreatePage from "main/pages/HelpRequest/HelpRequestCreatePage";
+import HelpRequestForm from "main/components/HelpRequest/HelpRequestForm";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter } from "react-router";
-
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
-
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
 const mockToast = vi.fn();
+const mockNavigate = vi.fn();
+
 vi.mock("react-toastify", async (importOriginal) => {
   const originalModule = await importOriginal();
   return {
@@ -18,15 +19,15 @@ vi.mock("react-toastify", async (importOriginal) => {
   };
 });
 
-const mockNavigate = vi.fn();
 vi.mock("react-router", async (importOriginal) => {
   const originalModule = await importOriginal();
   return {
     ...originalModule,
-    Navigate: vi.fn((x) => {
-      mockNavigate(x);
+    Navigate: vi.fn((props) => {
+      mockNavigate(props);
       return null;
     }),
+    useNavigate: () => mockNavigate,
   };
 });
 
@@ -100,6 +101,37 @@ describe("HelpRequestCreatePage tests", () => {
     expect(axiosMock.history.post.length).toBe(0);
   });
 
+  test("invalid email format shows an error", async () => {
+    renderPage();
+
+    const emailInput = await screen.findByLabelText("Requester Email");
+
+    fireEvent.change(emailInput, {
+      target: { value: "not-an-email" },
+    });
+
+    fireEvent.change(screen.getByLabelText("Team ID"), {
+      target: { value: "team02-f26-04" },
+    });
+    fireEvent.change(screen.getByLabelText("Table or Breakout Room"), {
+      target: { value: "Library 2510" },
+    });
+    fireEvent.change(screen.getByLabelText("Request Time"), {
+      target: { value: "2026-10-26T14:30" },
+    });
+    fireEvent.change(screen.getByLabelText("Explanation"), {
+      target: { value: "Need help" },
+    });
+
+    // Submit the form directly to trigger React Hook Form validation.
+    fireEvent.submit(emailInput.closest("form"));
+
+    expect(
+      await screen.findByText("Enter a valid email address."),
+    ).toBeInTheDocument();
+
+    expect(axiosMock.history.post.length).toBe(0);
+  });
   test("valid submission calls the API and redirects to /helprequest", async () => {
     const helpRequest = {
       id: 3,
@@ -156,11 +188,55 @@ describe("HelpRequestCreatePage tests", () => {
       expect(mockNavigate).toHaveBeenCalledWith({ to: "/helprequest" });
     });
   });
-  test("Cancel button can be clicked", async () => {
+
+  test("initial contents populate fields and unspecified fields keep defaults", () => {
+    render(
+      <MemoryRouter>
+        <HelpRequestForm
+          initialContents={{ requesterEmail: "student@ucsb.edu" }}
+          submitAction={vi.fn()}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByLabelText("Requester Email")).toHaveValue(
+      "student@ucsb.edu",
+    );
+    expect(screen.getByLabelText("Team ID")).toHaveValue("");
+    expect(screen.getByLabelText("Table or Breakout Room")).toHaveValue("");
+    expect(screen.getByLabelText("Request Time")).toHaveValue("");
+    expect(screen.getByLabelText("Explanation")).toHaveValue("");
+    expect(screen.getByLabelText("Solved")).not.toBeChecked();
+  });
+
+  test("form controls have their expected test IDs", async () => {
+    renderPage();
+
+    expect(
+      await screen.findByTestId("HelpRequestForm-requesterEmail"),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("HelpRequestForm-teamId")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("HelpRequestForm-tableOrBreakoutRoom"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId("HelpRequestForm-requestTime"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId("HelpRequestForm-explanation"),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("HelpRequestForm-solved")).toBeInTheDocument();
+    expect(screen.getByTestId("HelpRequestForm-submit")).toBeInTheDocument();
+    expect(screen.getByTestId("HelpRequestForm-cancel")).toBeInTheDocument();
+  });
+
+  test("Cancel button navigates backward", async () => {
     renderPage();
 
     await screen.findByLabelText("Requester Email");
 
     fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+
+    expect(mockNavigate).toHaveBeenCalledWith(-1);
   });
 });
