@@ -69,22 +69,22 @@ describe("MenuItemReviewForm tests", () => {
 
     expect(await screen.findByTestId(`${testId}-id`)).toBeInTheDocument();
     expect(screen.getByText(`Id`)).toBeInTheDocument();
-    expect(screen.getByText("Id")).toHaveValue(
+    expect(screen.getByTestId(`${testId}-id`)).toHaveValue(
       String(menuItemReviewFixtures.oneMenuItemReview.id),
     );
-    expect(screen.getByText("Item ID")).toHaveValue(
-      menuItemReviewFixtures.oneMenuItemReview.itemId,
+    expect(screen.getByTestId(`${testId}-itemId`)).toHaveValue(
+      String(menuItemReviewFixtures.oneMenuItemReview.itemId),
     );
-    expect(screen.getByText("Reviewer Email")).toHaveValue(
-      menuItemReviewFixtures.oneMenuItemReview.reviwerEmail,
+    expect(screen.getByTestId(`${testId}-reviewerEmail`)).toHaveValue(
+      menuItemReviewFixtures.oneMenuItemReview.reviewerEmail,
     );
-    expect(screen.getByText("Stars")).toHaveValue(
-      menuItemReviewFixtures.oneMenuItemReview.stars,
+    expect(screen.getByTestId(`${testId}-stars`)).toHaveValue(
+      String(menuItemReviewFixtures.oneMenuItemReview.stars),
     );
-    expect(screen.getByText("Date Reviewed")).toHaveValue(
-      removeZ(menuItemReviewFixtures.oneMenuItemReview.dateReviewed),
+    expect(screen.getByTestId(`${testId}-dateReviewed`)).toHaveValue(
+      removeZ(menuItemReviewFixtures.oneMenuItemReview.dateReviewed).slice(0, 16),
     );
-    expect(screen.getByText("Comments")).toHaveValue(
+    expect(screen.getByTestId(`${testId}-comments`)).toHaveValue(
       menuItemReviewFixtures.oneMenuItemReview.comments,
     );
   });
@@ -125,7 +125,7 @@ describe("MenuItemReviewForm tests", () => {
     expect(screen.getByText(/Comments are required/)).toBeInTheDocument();
 
     const itemIdInput = screen.getByTestId(`${testId}-itemId`);
-    fireEvent.change(itemIdInput, { target: { value: "a".repeat(256) } });
+    fireEvent.change(itemIdInput, {target: { value: "a".repeat(257) },});
     fireEvent.click(submitButton);
 
     await waitFor(() => {

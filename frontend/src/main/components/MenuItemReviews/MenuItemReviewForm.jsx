@@ -12,11 +12,13 @@ function MenuItemReviewForm({
   buttonLabel = "Create",
 }) {
   const defaultValues = initialContents
-    ? {
-        ...initialContents,
-        dateReviewed: removeZ(initialContents.dateReviewed),
-      }
-    : {};
+  ? {
+      ...initialContents,
+      dateReviewed: initialContents.dateReviewed
+        ? removeZ(initialContents.dateReviewed).slice(0, 16)
+        : "",
+    }
+  : {};
   // Stryker disable all
   const {
     register,
@@ -50,17 +52,18 @@ function MenuItemReviewForm({
       <Form.Group className="mb-3">
         <Form.Label htmlFor="itemId">Item ID</Form.Label>
         <Form.Control
-          id="itemId"
-          type="text"
-          isInvalid={Boolean(errors.itemId)}
-          {...register("itemId", {
-            required: "Item ID is required.",
-            maxLength: {
-              value: 256,
-              message: "Max length 256 characters",
-            },
-          })}
-        />
+  data-testid={testIdPrefix + "-itemId"}
+  id="itemId"
+  type="text"
+  isInvalid={Boolean(errors.itemId)}
+  {...register("itemId", {
+    required: "Item ID is required.",
+    maxLength: {
+      value: 256,
+      message: "Max length 256 characters",
+    },
+  })}
+/>
         <Form.Control.Feedback type="invalid">
           {errors.itemId?.message}
         </Form.Control.Feedback>
@@ -69,9 +72,10 @@ function MenuItemReviewForm({
       <Form.Group className="mb-3">
         <Form.Label htmlFor="reviewerEmail">Reviewer Email</Form.Label>
         <Form.Control
-          id="reviwerEmail"
+        data-testid={testIdPrefix + "-reviewerEmail"}
+          id="reviewerEmail"
           type="text"
-          isInvalid={Boolean(errors.reviwerEmail)}
+          isInvalid={Boolean(errors.reviewerEmail)}
           {...register("reviewerEmail", {
             required: "Reviewer Email is required.",
             maxLength: {
@@ -88,6 +92,7 @@ function MenuItemReviewForm({
       <Form.Group className="mb-3">
         <Form.Label htmlFor="stars">Stars</Form.Label>
         <Form.Control
+          data-testid={testIdPrefix + "-stars"}
           id="stars"
           type="text"
           isInvalid={Boolean(errors.stars)}
@@ -101,18 +106,19 @@ function MenuItemReviewForm({
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label htmlFor="dateReviewed">Date (iso format)</Form.Label>
+        <Form.Label htmlFor="dateReviewed">Date Reviewed</Form.Label>
         <Form.Control
+          data-testid={testIdPrefix + "-dateReviewed"}
           id="dateReviewed"
           type="datetime-local"
           isInvalid={Boolean(errors.dateReviewed)}
           {...register("dateReviewed", {
-            required: "Date Reviewed is required.",
-            pattern: {
-              value: isodate_regex,
-              message: "Date Reviewed must be in ISO format.",
-            },
-          })}
+          required: "Date Reviewed is required.",
+          pattern: {
+            value: isodate_regex,
+            message: "Date must be in ISO format.",
+          },
+        })}
         />
         <Form.Control.Feedback type="invalid">
           {errors.dateReviewed?.message}
@@ -122,6 +128,7 @@ function MenuItemReviewForm({
       <Form.Group className="mb-3">
         <Form.Label htmlFor="comments">Comments</Form.Label>
         <Form.Control
+          data-testid={testIdPrefix + "-comments"}
           id="comments"
           type="text"
           isInvalid={Boolean(errors.comments)}
