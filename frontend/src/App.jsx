@@ -15,6 +15,8 @@ import PlaceholderIndexPage from "main/pages/Placeholder/PlaceholderIndexPage";
 import PlaceholderCreatePage from "main/pages/Placeholder/PlaceholderCreatePage";
 import PlaceholderEditPage from "main/pages/Placeholder/PlaceholderEditPage";
 
+import HelpRequestIndexPage from "main/pages/HelpRequest/HelpRequestIndexPage";
+
 import { hasRole, useCurrentUser } from "main/utils/useCurrentUser";
 
 import "bootstrap/dist/css/bootstrap.css";
@@ -33,6 +35,9 @@ function App() {
       {hasRole(currentUser, "ROLE_USER") && (
         <>
           <Route exact path="/ucsbdates" element={<UCSBDatesIndexPage />} />
+          <Route exact path="/restaurants" element={<RestaurantIndexPage />} />
+          <Route exact path="/placeholder" element={<PlaceholderIndexPage />} />
+          <Route exact path="/helprequest" element={<HelpRequestIndexPage />} />
         </>
       )}
       {hasRole(currentUser, "ROLE_ADMIN") && (
@@ -47,15 +52,6 @@ function App() {
             path="/ucsbdates/create"
             element={<UCSBDatesCreatePage />}
           />
-        </>
-      )}
-      {hasRole(currentUser, "ROLE_USER") && (
-        <>
-          <Route exact path="/restaurants" element={<RestaurantIndexPage />} />
-        </>
-      )}
-      {hasRole(currentUser, "ROLE_ADMIN") && (
-        <>
           <Route
             exact
             path="/restaurants/edit/:id"
@@ -66,15 +62,6 @@ function App() {
             path="/restaurants/create"
             element={<RestaurantCreatePage />}
           />
-        </>
-      )}
-      {hasRole(currentUser, "ROLE_USER") && (
-        <>
-          <Route exact path="/placeholder" element={<PlaceholderIndexPage />} />
-        </>
-      )}
-      {hasRole(currentUser, "ROLE_ADMIN") && (
-        <>
           <Route
             exact
             path="/placeholder/edit/:id"
