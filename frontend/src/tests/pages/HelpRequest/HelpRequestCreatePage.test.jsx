@@ -1,8 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import HelpRequestCreatePage from "main/pages/HelpRequest/HelpRequestCreatePage";
-import HelpRequestForm, {
-  helpRequestDefaultValues,
-} from "main/components/HelpRequest/HelpRequestForm";
+import HelpRequestForm from "main/components/HelpRequest/HelpRequestForm";
+import { helpRequestDefaultValues } from "main/components/HelpRequest/HelpRequestFormDefaults";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter } from "react-router";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
