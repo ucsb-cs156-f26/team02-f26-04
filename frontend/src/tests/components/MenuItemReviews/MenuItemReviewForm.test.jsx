@@ -82,7 +82,10 @@ describe("MenuItemReviewForm tests", () => {
       String(menuItemReviewFixtures.oneMenuItemReview.stars),
     );
     expect(screen.getByTestId(`${testId}-dateReviewed`)).toHaveValue(
-      removeZ(menuItemReviewFixtures.oneMenuItemReview.dateReviewed).slice(0, 16),
+      removeZ(menuItemReviewFixtures.oneMenuItemReview.dateReviewed).slice(
+        0,
+        16,
+      ),
     );
     expect(screen.getByTestId(`${testId}-comments`)).toHaveValue(
       menuItemReviewFixtures.oneMenuItemReview.comments,
@@ -114,6 +117,7 @@ describe("MenuItemReviewForm tests", () => {
       </QueryClientProvider>,
     );
 
+
     expect(await screen.findByText(/Create/)).toBeInTheDocument();
     const submitButton = screen.getByText(/Create/);
     fireEvent.click(submitButton);
@@ -125,11 +129,27 @@ describe("MenuItemReviewForm tests", () => {
     expect(screen.getByText(/Comments are required/)).toBeInTheDocument();
 
     const itemIdInput = screen.getByTestId(`${testId}-itemId`);
-    fireEvent.change(itemIdInput, {target: { value: "a".repeat(257) },});
+    fireEvent.change(itemIdInput, { target: { value: "a".repeat(257) } });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
       expect(screen.getByText(/Max length 256 characters/)).toBeInTheDocument();
     });
+  });
+  test("handles initialContents without a dateReviewed", async () => {
+    const contentsWithoutDate = {
+      ...menuItemReviewFixtures.oneMenuItemReview,
+      dateReviewed: "",
+    };
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <MenuItemReviewForm initialContents={contentsWithoutDate} />
+        </Router>
+      </QueryClientProvider>,
+    );
+
+    expect(screen.getByTestId(`${testId}-dateReviewed`)).toHaveValue("");
   });
 });
