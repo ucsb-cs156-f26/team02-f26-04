@@ -1,6 +1,14 @@
 import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+export const helpRequestDefaultValues = {
+  requesterEmail: "",
+  teamId: "",
+  tableOrBreakoutRoom: "",
+  requestTime: "",
+  explanation: "",
+  solved: false,
+};
 
 function HelpRequestForm({
   initialContents,
@@ -13,12 +21,7 @@ function HelpRequestForm({
     handleSubmit,
   } = useForm({
     defaultValues: {
-      requesterEmail: "",
-      teamId: "",
-      tableOrBreakoutRoom: "",
-      requestTime: "",
-      explanation: "",
-      solved: false,
+      ...helpRequestDefaultValues,
       ...(initialContents || {}),
     },
   });
