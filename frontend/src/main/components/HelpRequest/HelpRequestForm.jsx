@@ -11,7 +11,6 @@ function HelpRequestForm({
   tableOrBreakoutRoomRequiredMessage = "Table or breakout room is required.",
   requestTimeRequiredMessage = "Request time is required.",
 }) {
-  // Stryker disable all
   const {
     register,
     formState: { errors },
@@ -25,7 +24,6 @@ function HelpRequestForm({
         : {}),
     },
   });
-  // Stryker restore all
 
   const navigate = useNavigate();
   const testIdPrefix = "HelpRequestForm";
@@ -64,6 +62,7 @@ function HelpRequestForm({
           {errors.requesterEmail?.message}
         </Form.Control.Feedback>
       </Form.Group>
+
       <Form.Group className="mb-3">
         <Form.Label htmlFor="teamId">Team ID</Form.Label>
         <Form.Control
@@ -96,6 +95,7 @@ function HelpRequestForm({
           {errors.tableOrBreakoutRoom?.message}
         </Form.Control.Feedback>
       </Form.Group>
+
       <Form.Group className="mb-3">
         <Form.Label htmlFor="requestTime">Request Time</Form.Label>
         <Form.Control
@@ -111,13 +111,13 @@ function HelpRequestForm({
           {errors.requestTime?.message}
         </Form.Control.Feedback>
       </Form.Group>
+
       <Form.Group className="mb-3">
         <Form.Label htmlFor="explanation">Explanation</Form.Label>
         <Form.Control
           id="explanation"
           data-testid={`${testIdPrefix}-explanation`}
           as="textarea"
-          rows={3}
           isInvalid={Boolean(errors.explanation)}
           {...register("explanation", {
             required: "Explanation is required.",
@@ -127,6 +127,7 @@ function HelpRequestForm({
           {errors.explanation?.message}
         </Form.Control.Feedback>
       </Form.Group>
+
       <Form.Group className="mb-3">
         <Form.Check
           id="solved"
@@ -136,9 +137,11 @@ function HelpRequestForm({
           {...register("solved")}
         />
       </Form.Group>
+
       <Button type="submit" data-testid={`${testIdPrefix}-submit`}>
         {buttonLabel}
       </Button>
+
       <Button
         type="button"
         variant="secondary"
