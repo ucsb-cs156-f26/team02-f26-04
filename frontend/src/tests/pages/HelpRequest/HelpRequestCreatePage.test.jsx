@@ -156,4 +156,11 @@ describe("HelpRequestCreatePage tests", () => {
       expect(mockNavigate).toHaveBeenCalledWith({ to: "/helprequest" });
     });
   });
+  test("Cancel button can be clicked", async () => {
+    renderPage();
+
+    await screen.findByLabelText("Requester Email");
+
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+  });
 });
