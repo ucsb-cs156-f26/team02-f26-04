@@ -11,7 +11,6 @@ import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
 const mockToast = vi.fn();
-
 vi.mock("react-toastify", async (importOriginal) => {
   const originalModule = await importOriginal();
   return {
@@ -19,7 +18,6 @@ vi.mock("react-toastify", async (importOriginal) => {
     toast: vi.fn((x) => mockToast(x)),
   };
 });
-
 const mockNavigate = vi.fn();
 
 vi.mock("react-router", async (importOriginal) => {
@@ -167,7 +165,6 @@ describe("HelpRequestIndexPage tests", () => {
     expect(console.error.mock.calls[0][0]).toMatch(
       "Error communicating with backend via GET on /api/HelpRequest/all",
     );
-
     restoreConsole();
   });
 
