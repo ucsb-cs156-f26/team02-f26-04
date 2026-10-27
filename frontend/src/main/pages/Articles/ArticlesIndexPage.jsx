@@ -24,7 +24,7 @@ export default function ArticlesIndexPage() {
   };
 
   const {
-    data: dates,
+    data: articles,
     error: _error,
     status: _status,
   } = useBackend(
