@@ -22,9 +22,12 @@ export default function HelpRequestCreatePage({ storybook = false }) {
     toast(`New help request created - id: ${helpRequest.id}`);
   };
 
-  const mutation = useBackendMutation(objectToAxiosParams, { onSuccess }, [
-    "/api/HelpRequest/all",
-  ]);
+  const mutation = useBackendMutation(
+    objectToAxiosParams,
+    { onSuccess },
+    // Stryker disable next-line all : invalidates the HelpRequest list cache after creation
+    ["/api/HelpRequest/all"],
+  );
 
   const { isSuccess } = mutation;
 
