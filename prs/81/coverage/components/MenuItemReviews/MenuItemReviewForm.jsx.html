@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
@@ -222,8 +222,7 @@
 <a name='L157'></a><a href='#L157'>157</a>
 <a name='L158'></a><a href='#L158'>158</a>
 <a name='L159'></a><a href='#L159'>159</a>
-<a name='L160'></a><a href='#L160'>160</a>
-<a name='L161'></a><a href='#L161'>161</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L160'></a><a href='#L160'>160</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -236,7 +235,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -249,16 +248,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -397,13 +395,13 @@ function MenuItemReviewForm({
   buttonLabel = "Create",
 }) {
   const defaultValues = initialContents
-  ? {
-      ...initialContents,
-      dateReviewed: initialContents.dateReviewed
-        ? removeZ(initialContents.dateReviewed).slice(0, 16)
-        : <span class="branch-1 cbranch-no" title="branch not covered" >"",</span>
-    }
-  : {};
+    ? {
+        ...initialContents,
+        dateReviewed: initialContents.dateReviewed
+          ? removeZ(initialContents.dateReviewed).slice(0, 16)
+          : "",
+      }
+    : {};
   // Stryker disable all
   const {
     register,
@@ -415,8 +413,7 @@ function MenuItemReviewForm({
   const navigate = useNavigate();
 &nbsp;
   const testIdPrefix = "MenuItemReviewForm";
-  const isodate_regex =
-    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/;
+  const isodate_regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/;
 &nbsp;
   return (
     &lt;Form onSubmit={handleSubmit(submitAction)}&gt;
@@ -437,18 +434,18 @@ function MenuItemReviewForm({
       &lt;Form.Group className="mb-3"&gt;
         &lt;Form.Label htmlFor="itemId"&gt;Item ID&lt;/Form.Label&gt;
         &lt;Form.Control
-  data-testid={testIdPrefix + "-itemId"}
-  id="itemId"
-  type="text"
-  isInvalid={Boolean(errors.itemId)}
-  {...register("itemId", {
-    required: "Item ID is required.",
-    maxLength: {
-      value: 256,
-      message: "Max length 256 characters",
-    },
-  })}
-/&gt;
+          data-testid={testIdPrefix + "-itemId"}
+          id="itemId"
+          type="text"
+          isInvalid={Boolean(errors.itemId)}
+          {...register("itemId", {
+            required: "Item ID is required.",
+            maxLength: {
+              value: 256,
+              message: "Max length 256 characters",
+            },
+          })}
+        /&gt;
         &lt;Form.Control.Feedback type="invalid"&gt;
           {errors.itemId?.message}
         &lt;/Form.Control.Feedback&gt;
@@ -457,7 +454,7 @@ function MenuItemReviewForm({
       &lt;Form.Group className="mb-3"&gt;
         &lt;Form.Label htmlFor="reviewerEmail"&gt;Reviewer Email&lt;/Form.Label&gt;
         &lt;Form.Control
-        data-testid={testIdPrefix + "-reviewerEmail"}
+          data-testid={testIdPrefix + "-reviewerEmail"}
           id="reviewerEmail"
           type="text"
           isInvalid={Boolean(errors.reviewerEmail)}
@@ -498,12 +495,12 @@ function MenuItemReviewForm({
           type="datetime-local"
           isInvalid={Boolean(errors.dateReviewed)}
           {...register("dateReviewed", {
-          required: "Date Reviewed is required.",
-          pattern: {
-            value: isodate_regex,
-            message: "Date must be in ISO format.",
-          },
-        })}
+            required: "Date Reviewed is required.",
+            pattern: {
+              value: isodate_regex,
+              message: "Date must be in ISO format.",
+            },
+          })}
         /&gt;
         &lt;Form.Control.Feedback type="invalid"&gt;
           {errors.dateReviewed?.message}
@@ -550,7 +547,7 @@ export default MenuItemReviewForm;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-10-27T23:23:55.167Z
+                at 2026-10-27T23:48:43.280Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
