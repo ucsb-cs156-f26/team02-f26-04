@@ -26,6 +26,10 @@ describe("AppNavbar tests", () => {
     expect(
       screen.getByText("Welcome, pconrad.cis@gmail.com"),
     ).toBeInTheDocument();
+    // Logged-in users can access the menu item page from the navbar.
+    expect(
+      screen.getByRole("link", { name: "UCSBDiningCommonsMenuItem" }),
+    ).toHaveAttribute("href", "/diningcommonsmenuitem");
   });
 
   test("renders correctly for admin user", async () => {
@@ -212,6 +216,10 @@ describe("AppNavbar tests", () => {
 
     expect(screen.queryByText("Restaurants")).not.toBeInTheDocument();
     expect(screen.queryByText("UCSBDates")).not.toBeInTheDocument();
+    // Logged-out users should not see the menu item link.
+    expect(
+      screen.queryByRole("link", { name: "UCSBDiningCommonsMenuItem" }),
+    ).not.toBeInTheDocument();
   });
 
   test("when oauthlogin undefined, default value is used", async () => {
