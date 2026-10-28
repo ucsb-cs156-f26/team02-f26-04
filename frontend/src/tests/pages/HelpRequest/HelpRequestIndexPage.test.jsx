@@ -11,6 +11,7 @@ import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
 const mockToast = vi.fn();
+
 vi.mock("react-toastify", async (importOriginal) => {
   const originalModule = await importOriginal();
   return {
@@ -18,6 +19,7 @@ vi.mock("react-toastify", async (importOriginal) => {
     toast: vi.fn((x) => mockToast(x)),
   };
 });
+
 const mockNavigate = vi.fn();
 
 vi.mock("react-router", async (importOriginal) => {
@@ -27,9 +29,9 @@ vi.mock("react-router", async (importOriginal) => {
     useNavigate: () => mockNavigate,
   };
 });
+
 describe("HelpRequestIndexPage tests", () => {
   const axiosMock = new AxiosMockAdapter(axios);
-
   const testId = "HelpRequestTable";
 
   const setupUserOnly = () => {
@@ -93,6 +95,16 @@ describe("HelpRequestIndexPage tests", () => {
       ).toBeInTheDocument();
     });
 
+    // Verify all column headers.
+    expect(screen.getByText("id")).toBeInTheDocument();
+    expect(screen.getByText("Requester Email")).toBeInTheDocument();
+    expect(screen.getByText("Team ID")).toBeInTheDocument();
+    expect(screen.getByText("Table or Breakout Room")).toBeInTheDocument();
+    expect(screen.getByText("Request Time")).toBeInTheDocument();
+    expect(screen.getByText("Explanation")).toBeInTheDocument();
+    expect(screen.getByText("Solved")).toBeInTheDocument();
+
+    // Verify values in the first three rows.
     expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent(
       "1",
     );
@@ -103,12 +115,28 @@ describe("HelpRequestIndexPage tests", () => {
       "3",
     );
 
+    // Verify the tableOrBreakoutRoom column has data.
+    expect(
+      screen.getByTestId(`${testId}-cell-row-0-col-tableOrBreakoutRoom`),
+    ).not.toBeEmptyDOMElement();
+
+    // Verify the requestTime column has data.
+    expect(
+      screen.getByTestId(`${testId}-cell-row-0-col-requestTime`),
+    ).not.toBeEmptyDOMElement();
+
+    // Verify the solved column has data.
+    expect(
+      screen.getByTestId(`${testId}-cell-row-0-col-solved`),
+    ).not.toBeEmptyDOMElement();
+
     expect(screen.getByText("student1@ucsb.edu")).toBeInTheDocument();
     expect(
       screen.getByTestId(`${testId}-cell-row-1-col-teamId`),
     ).toHaveTextContent("team02");
     expect(screen.getByText("Need help debugging tests")).toBeInTheDocument();
 
+    // Regular users should not see admin controls.
     expect(screen.queryByText("Create HelpRequest")).not.toBeInTheDocument();
     expect(
       screen.queryByTestId(`${testId}-cell-row-0-col-Delete-button`),
@@ -139,6 +167,7 @@ describe("HelpRequestIndexPage tests", () => {
     expect(console.error.mock.calls[0][0]).toMatch(
       "Error communicating with backend via GET on /api/HelpRequest/all",
     );
+
     restoreConsole();
   });
 
@@ -163,6 +192,9 @@ describe("HelpRequestIndexPage tests", () => {
     const deleteButton = await screen.findByTestId(
       `${testId}-cell-row-0-col-Delete-button`,
     );
+
+    // Verify that the Delete button uses the danger variant.
+    expect(deleteButton.className).toContain("danger");
 
     fireEvent.click(deleteButton);
 
@@ -200,8 +232,46 @@ describe("HelpRequestIndexPage tests", () => {
       `${testId}-cell-row-0-col-Edit-button`,
     );
 
+    // Verify that the Edit button uses the primary variant.
+    expect(editButton.className).toContain("primary");
+
     fireEvent.click(editButton);
 
     expect(mockNavigate).toHaveBeenCalledWith("/helprequest/edit/1");
+  });
+
+  test("initially renders an empty table before data is loaded", async () => {
+    setupUserOnly();
+
+    const freshQueryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
+    // Keep the API request pending.
+    axiosMock.onGet("/api/HelpRequest/all").reply(() => new Promise(() => {}));
+
+    render(
+      <QueryClientProvider client={freshQueryClient}>
+        <MemoryRouter>
+          <HelpRequestIndexPage />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    // Wait until the request has started.
+    await waitFor(() => {
+      expect(
+        axiosMock.history.get.some(
+          (request) => request.url === "/api/HelpRequest/all",
+        ),
+      ).toBe(true);
+    });
+
+    // The initial state should not contain a fake row.
+    expect(screen.queryByText("Stryker was here")).not.toBeInTheDocument();
   });
 });
