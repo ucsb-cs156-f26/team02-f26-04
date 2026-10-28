@@ -97,6 +97,9 @@ function App() {
             exact
             path="/recommendationrequest/create"
             element={<RecommendationRequestCreatePage />}
+          />
+          <Route
+            exact
             path="/helprequest/edit/:id"
             element={<HelpRequestEditPage />}
           />
