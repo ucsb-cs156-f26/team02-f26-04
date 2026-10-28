@@ -234,6 +234,11 @@ function App() {
           />
           <Route
             exact
+            path="/helprequest/edit/:id"
+            element={<HelpRequestEditPage />}
+          />
+          <Route
+            exact
             path="/placeholder/edit/:id"
             element={<PlaceholderEditPage />}
           />
