@@ -1,3 +1,4 @@
+
 const helpRequestFixtures = {
   oneHelpRequest: [
     {
@@ -6,7 +7,7 @@ const helpRequestFixtures = {
       teamId: "team01",
       tableOrBreakoutRoom: "Table 3",
       requestTime: "2026-10-20T14:30:00",
-      explanation: "Need help debugging tests",
+      explanation: "I need help understanding the assignment.",
       solved: false,
     },
   ],
@@ -35,9 +36,9 @@ const helpRequestFixtures = {
       requesterEmail: "student3@ucsb.edu",
       teamId: "team03",
       tableOrBreakoutRoom: "Table 7",
-      requestTime: "2026-10-20T15:30:00",
-      explanation: "Need help with a merge conflict",
-      solved: false,
+      requestTime: "2026-10-22T16:45:00",
+      explanation: "I have a question about the lecture material.",
+      solved: true,
     },
   ],
 };
