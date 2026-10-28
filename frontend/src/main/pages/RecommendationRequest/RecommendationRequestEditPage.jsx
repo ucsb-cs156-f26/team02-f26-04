@@ -15,6 +15,7 @@ export default function RecommendationRequestEditPage({ storybook = false }) {
     // Stryker disable next-line all : don't test internal caching of React Query
     [`/api/recommendationrequests?id=${id}`],
     {
+      // Stryker disable next-line all : Axios treats an empty method as GET
       method: "GET",
       url: "/api/recommendationrequests",
       params: {
