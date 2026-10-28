@@ -26,7 +26,7 @@ Default.parameters = {
       });
     }),
     http.post("/api/menu-item-reviews/post", () => {
-      return HttpResponse.json(menuItemReviewfixtures.oneMenuItemReview, {
+      return HttpResponse.json(menuItemReviewFixtures.oneMenuItemReview, {
         status: 200,
       });
     }),
