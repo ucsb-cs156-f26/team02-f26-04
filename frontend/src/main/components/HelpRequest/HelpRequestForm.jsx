@@ -139,7 +139,6 @@ function HelpRequestForm({
       <Button type="submit" data-testid={`${testIdPrefix}-submit`}>
         {buttonLabel}
       </Button>
-
       <Button
         type="button"
         variant="secondary"
