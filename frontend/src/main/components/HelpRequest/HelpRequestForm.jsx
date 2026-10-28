@@ -30,15 +30,11 @@ function HelpRequestForm({
   const navigate = useNavigate();
   const testIdPrefix = "HelpRequestForm";
 
-  // Stryker disable Regex
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  // Stryker restore Regex
-
   return (
     <Form noValidate onSubmit={handleSubmit(submitAction)}>
       {initialContents && (
         <Form.Group className="mb-3">
-          <Form.Label htmlFor="id">ID</Form.Label>
+          <Form.Label htmlFor="id">Id</Form.Label>
           <Form.Control
             data-testid={`${testIdPrefix}-id`}
             id="id"
