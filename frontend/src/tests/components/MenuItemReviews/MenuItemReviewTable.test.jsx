@@ -91,7 +91,7 @@ describe("MenuItemReviewTable tests", () => {
     ).toHaveTextContent("5");
     expect(
       screen.getByTestId(`${testId}-cell-row-0-col-comments`),
-    ).toHaveTextContent("Excellent Item!");
+    ).toHaveTextContent("Excellent item!");
     expect(
       screen.getByTestId(`${testId}-cell-row-0-col-dateReviewed`),
     ).toHaveTextContent("2022-01-02T12:00:00");
@@ -170,7 +170,7 @@ describe("MenuItemReviewTable tests", () => {
     ).toHaveTextContent("5");
     expect(
       screen.getByTestId(`${testId}-cell-row-0-col-comments`),
-    ).toHaveTextContent("Excellent Item!");
+    ).toHaveTextContent("Excellent item!");
     expect(
       screen.getByTestId(`${testId}-cell-row-0-col-dateReviewed`),
     ).toHaveTextContent("2022-01-02T12:00:00");
@@ -229,7 +229,7 @@ describe("MenuItemReviewTable tests", () => {
     ).toHaveTextContent("5");
     expect(
       screen.getByTestId(`${testId}-cell-row-0-col-comments`),
-    ).toHaveTextContent("Excellent Item!");
+    ).toHaveTextContent("Excellent item!");
     expect(
       screen.getByTestId(`${testId}-cell-row-0-col-dateReviewed`),
     ).toHaveTextContent("2022-01-02T12:00:00");
