@@ -15,8 +15,8 @@ export default function MenuItemReviewIndexPage() {
     status: _status,
   } = useBackend(
     // Stryker disable next-line all : don't test internal caching of React Query
-    ["/api/menu-item-reviews/all"],
-    { method: "GET", url: "/api/menu-item-reviews/all" },
+    ["/api/menuitemreviews/all"],
+    { method: "GET", url: "/api/menuitemreviews/all" },
     // Stryker disable next-line all : don't test default value of empty list
     [],
   );
@@ -26,7 +26,7 @@ export default function MenuItemReviewIndexPage() {
       return (
         <Button
           variant="primary"
-          href="/menu-item-reviews/create"
+          href="/menuitemreviews/create"
           style={{ float: "right" }}
         >
           Create MenuItemReview

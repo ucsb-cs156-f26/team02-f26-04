@@ -64,7 +64,7 @@ function App() {
         <>
           <Route
             exact
-            path="/menu-item-reviews"
+            path="/menuitemreviews"
             element={<MenuItemReviewIndexPage />}
           />
         </>
@@ -73,12 +73,12 @@ function App() {
         <>
           <Route
             exact
-            path="/menu-item-reviews/edit/:id"
+            path="/menuitemreviews/edit/:id"
             element={<MenuItemReviewEditPage />}
           />
           <Route
             exact
-            path="/menu-item-reviews/create"
+            path="/menuitemreviews/create"
             element={<MenuItemReviewCreatePage />}
           />
         </>
