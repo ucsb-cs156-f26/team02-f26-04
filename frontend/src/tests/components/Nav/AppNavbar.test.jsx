@@ -26,6 +26,10 @@ describe("AppNavbar tests", () => {
     expect(
       screen.getByText("Welcome, pconrad.cis@gmail.com"),
     ).toBeInTheDocument();
+    // Logged-in users can access the menu item page from the navbar.
+    expect(
+      screen.getByRole("link", { name: "UCSBDiningCommonsMenuItem" }),
+    ).toHaveAttribute("href", "/diningcommonsmenuitem");
   });
 
   test("renders correctly for admin user", async () => {
@@ -192,6 +196,45 @@ describe("AppNavbar tests", () => {
     expect(link).toBeInTheDocument();
     expect(link.getAttribute("href")).toBe("/restaurants");
   });
+  test("renders the HelpRequest link correctly", async () => {
+    const currentUser = currentUserFixtures.userOnly;
+    const systemInfo = systemInfoFixtures.showingBoth;
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AppNavbar currentUser={currentUser} systemInfo={systemInfo} />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    const link = await screen.findByRole("link", {
+      name: "Help Requests",
+    });
+
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/helprequest");
+  });
+
+  test("renders the UCSBOrganization link correctly", async () => {
+    const currentUser = currentUserFixtures.userOnly;
+    const systemInfo = systemInfoFixtures.showingBoth;
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AppNavbar currentUser={currentUser} systemInfo={systemInfo} />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    const link = await screen.findByRole("link", {
+      name: "UCSBOrganization",
+    });
+
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/ucsborganization");
+  });
 
   test("Restaurant and UCSBDates links do NOT show when not logged in", async () => {
     const currentUser = null;
@@ -212,6 +255,10 @@ describe("AppNavbar tests", () => {
 
     expect(screen.queryByText("Restaurants")).not.toBeInTheDocument();
     expect(screen.queryByText("UCSBDates")).not.toBeInTheDocument();
+    // Logged-out users should not see the menu item link.
+    expect(
+      screen.queryByRole("link", { name: "UCSBDiningCommonsMenuItem" }),
+    ).not.toBeInTheDocument();
   });
 
   test("when oauthlogin undefined, default value is used", async () => {
