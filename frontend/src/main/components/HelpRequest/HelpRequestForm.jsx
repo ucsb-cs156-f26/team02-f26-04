@@ -8,8 +8,8 @@ function HelpRequestForm({
   submitAction,
   buttonLabel = "Create",
   requesterEmailRequiredMessage = "Requester Email is required.",
-  tableOrBreakoutRoomRequiredMessage = "Table or Breakout Room is required.",
-  requestTimeRequiredMessage = "Request Time is required.",
+  tableOrBreakoutRoomRequiredMessage = "Table or breakout room is required.",
+  requestTimeRequiredMessage = "Request time is required.",
 }) {
   // Stryker disable all
   const {
@@ -20,6 +20,9 @@ function HelpRequestForm({
     defaultValues: {
       ...helpRequestDefaultValues,
       ...(initialContents || {}),
+      ...(initialContents
+        ? { requestTime: initialContents.requestTime?.slice(0, 16) || "" }
+        : {}),
     },
   });
   // Stryker restore all
@@ -40,13 +43,12 @@ function HelpRequestForm({
             data-testid={`${testIdPrefix}-id`}
             id="id"
             type="text"
-            {...register("id")}
             value={initialContents.id}
             disabled
+            readOnly
           />
         </Form.Group>
       )}
-
       <Form.Group className="mb-3">
         <Form.Label htmlFor="requesterEmail">Requester Email</Form.Label>
         <Form.Control
@@ -66,7 +68,6 @@ function HelpRequestForm({
           {errors.requesterEmail?.message}
         </Form.Control.Feedback>
       </Form.Group>
-
       <Form.Group className="mb-3">
         <Form.Label htmlFor="teamId">Team ID</Form.Label>
         <Form.Control
@@ -82,7 +83,6 @@ function HelpRequestForm({
           {errors.teamId?.message}
         </Form.Control.Feedback>
       </Form.Group>
-
       <Form.Group className="mb-3">
         <Form.Label htmlFor="tableOrBreakoutRoom">
           Table or Breakout Room
@@ -100,14 +100,12 @@ function HelpRequestForm({
           {errors.tableOrBreakoutRoom?.message}
         </Form.Control.Feedback>
       </Form.Group>
-
       <Form.Group className="mb-3">
         <Form.Label htmlFor="requestTime">Request Time</Form.Label>
         <Form.Control
           id="requestTime"
           data-testid={`${testIdPrefix}-requestTime`}
           type="datetime-local"
-          step="1"
           isInvalid={Boolean(errors.requestTime)}
           {...register("requestTime", {
             required: requestTimeRequiredMessage,
@@ -117,13 +115,13 @@ function HelpRequestForm({
           {errors.requestTime?.message}
         </Form.Control.Feedback>
       </Form.Group>
-
       <Form.Group className="mb-3">
         <Form.Label htmlFor="explanation">Explanation</Form.Label>
         <Form.Control
           id="explanation"
           data-testid={`${testIdPrefix}-explanation`}
           as="textarea"
+          rows={3}
           isInvalid={Boolean(errors.explanation)}
           {...register("explanation", {
             required: "Explanation is required.",
@@ -133,7 +131,6 @@ function HelpRequestForm({
           {errors.explanation?.message}
         </Form.Control.Feedback>
       </Form.Group>
-
       <Form.Group className="mb-3">
         <Form.Check
           id="solved"
@@ -143,7 +140,6 @@ function HelpRequestForm({
           {...register("solved")}
         />
       </Form.Group>
-
       <Button type="submit" data-testid={`${testIdPrefix}-submit`}>
         {buttonLabel}
       </Button>
