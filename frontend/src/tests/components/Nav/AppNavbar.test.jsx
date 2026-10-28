@@ -261,6 +261,12 @@ describe("AppNavbar tests", () => {
   });
 
   test("Restaurant, Articles and UCSBDates links do NOT show when not logged in", async () => {
+    const link = await screen.findByText("RecommendationRequest");
+    expect(link).toBeInTheDocument();
+    expect(link.getAttribute("href")).toBe("/recommendationrequest");
+  });
+
+  test("Restaurant and UCSBDates links do NOT show when not logged in", async () => {
     const currentUser = null;
     const systemInfo = systemInfoFixtures.showingBoth;
     const doLogin = vi.fn();
