@@ -7,6 +7,9 @@ function HelpRequestForm({
   initialContents,
   submitAction,
   buttonLabel = "Create",
+  requesterEmailRequiredMessage = "Requester Email is required.",
+  tableOrBreakoutRoomRequiredMessage = "Table or Breakout Room is required.",
+  requestTimeRequiredMessage = "Request Time is required.",
 }) {
   // Stryker disable all
   const {
@@ -19,31 +22,17 @@ function HelpRequestForm({
       ...(initialContents || {}),
     },
   });
-  } = useForm({ defaultValues: initialContents || {} });
   // Stryker restore all
 
   const navigate = useNavigate();
   const testIdPrefix = "HelpRequestForm";
 
-  return (
-    <Form onSubmit={handleSubmit(submitAction)}>
-      <Form.Group className="mb-3">
-        <Form.Label htmlFor="requesterEmail">Requester Email</Form.Label>
-        <Form.Control
-          id="requesterEmail"
-          data-testid={`${testIdPrefix}-requesterEmail`}
-          type="email"
-          isInvalid={Boolean(errors.requesterEmail)}
-          {...register("requesterEmail", {
-            required: "Requester email is required.",
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   // Stryker disable Regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   // Stryker restore Regex
 
   return (
-    <Form onSubmit={handleSubmit(submitAction)}>
+    <Form noValidate onSubmit={handleSubmit(submitAction)}>
       {initialContents && (
         <Form.Group className="mb-3">
           <Form.Label htmlFor="id">ID</Form.Label>
@@ -61,12 +50,12 @@ function HelpRequestForm({
       <Form.Group className="mb-3">
         <Form.Label htmlFor="requesterEmail">Requester Email</Form.Label>
         <Form.Control
-          data-testid={`${testIdPrefix}-requesterEmail`}
           id="requesterEmail"
-          type="text"
+          data-testid={`${testIdPrefix}-requesterEmail`}
+          type="email"
           isInvalid={Boolean(errors.requesterEmail)}
           {...register("requesterEmail", {
-            required: "Requester Email is required.",
+            required: requesterEmailRequiredMessage,
             pattern: {
               value: emailRegex,
               message: "Enter a valid email address.",
@@ -104,7 +93,7 @@ function HelpRequestForm({
           type="text"
           isInvalid={Boolean(errors.tableOrBreakoutRoom)}
           {...register("tableOrBreakoutRoom", {
-            required: "Table or breakout room is required.",
+            required: tableOrBreakoutRoomRequiredMessage,
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -118,16 +107,10 @@ function HelpRequestForm({
           id="requestTime"
           data-testid={`${testIdPrefix}-requestTime`}
           type="datetime-local"
-          isInvalid={Boolean(errors.requestTime)}
-          {...register("requestTime", {
-            required: "Request time is required.",
-          data-testid={`${testIdPrefix}-requestTime`}
-          id="requestTime"
-          type="datetime-local"
           step="1"
           isInvalid={Boolean(errors.requestTime)}
           {...register("requestTime", {
-            required: "Request Time is required.",
+            required: requestTimeRequiredMessage,
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -153,8 +136,8 @@ function HelpRequestForm({
 
       <Form.Group className="mb-3">
         <Form.Check
-          data-testid={`${testIdPrefix}-solved`}
           id="solved"
+          data-testid={`${testIdPrefix}-solved`}
           type="checkbox"
           label="Solved"
           {...register("solved")}
@@ -168,8 +151,6 @@ function HelpRequestForm({
       <Button
         type="button"
         variant="secondary"
-      <Button
-        variant="Secondary"
         onClick={() => navigate(-1)}
         data-testid={`${testIdPrefix}-cancel`}
       >
