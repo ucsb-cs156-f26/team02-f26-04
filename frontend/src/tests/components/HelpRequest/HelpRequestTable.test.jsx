@@ -1,7 +1,13 @@
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import HelpRequestTable from "main/components/HelpRequest/HelpRequestTable";
 
 describe("HelpRequestTable tests", () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
   const testId = "HelpRequestTable";
 
   const expectedHeaders = [
@@ -46,7 +52,16 @@ describe("HelpRequestTable tests", () => {
   ];
 
   test("renders empty table correctly", () => {
-    render(<HelpRequestTable helpRequests={[]} />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <HelpRequestTable
+            helpRequests={[]}
+            currentUser={apiCurrentUserFixtures.userOnly}
+          />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
 
     expectedHeaders.forEach((headerText) => {
       expect(screen.getByText(headerText)).toBeInTheDocument();
@@ -60,7 +75,16 @@ describe("HelpRequestTable tests", () => {
   });
 
   test("renders all column headers and HelpRequest data", () => {
-    render(<HelpRequestTable helpRequests={helpRequests} />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <HelpRequestTable
+            helpRequests={helpRequests}
+            currentUser={apiCurrentUserFixtures.userOnly}
+          />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
 
     expectedHeaders.forEach((headerText) => {
       expect(screen.getByText(headerText)).toBeInTheDocument();

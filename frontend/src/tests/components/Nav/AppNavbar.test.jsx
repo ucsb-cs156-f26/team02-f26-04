@@ -209,7 +209,7 @@ describe("AppNavbar tests", () => {
     );
 
     const link = await screen.findByRole("link", {
-      name: "HelpRequest",
+      name: "Help Requests",
     });
 
     expect(link).toBeInTheDocument();
