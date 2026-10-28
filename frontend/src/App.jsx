@@ -179,6 +179,8 @@ function App() {
             exact
             path="/ucsborganization/create"
             element={<UCSBOrganizationCreatePage />}
+          />
+          <Route
             path="/articles/edit/:id"
             element={<ArticlesEditPage />}
           />
@@ -220,16 +222,6 @@ function App() {
             exact
             path="/diningcommonsmenuitem/edit/:id"
             element={<UCSBDiningCommonsMenuItemEditPage />}
-          />
-          <Route
-            exact
-            path="/articles/edit/:id"
-            element={<ArticlesEditPage />}
-          />
-          <Route
-            exact
-            path="/articles/create"
-            element={<ArticlesCreatePage />}
           />
         </>
       )}
