@@ -82,7 +82,7 @@ function MenuItemReviewForm({
           type="text"
           isInvalid={Boolean(errors.stars)}
           {...register("stars", {
-            required: "Stars is required.",
+            required: "Stars are required.",
           })}
         />
         <Form.Control.Feedback type="invalid">

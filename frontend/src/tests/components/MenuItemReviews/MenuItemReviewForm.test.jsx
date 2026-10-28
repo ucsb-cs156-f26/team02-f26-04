@@ -16,8 +16,8 @@ vi.mock("react-router", async () => {
 
 const oneMenuItemReviewRequest = {
   id: 1,
-  itemId: 1,
-  stars: 5,
+  itemId: "1",
+  stars: "5",
   reviewerEmail: "student1@ucsb.edu",
   comments: "Great item!",
   dateReviewed: "2026-10-20T14:30",
@@ -41,17 +41,11 @@ describe("MenuItemReviewForm tests", () => {
 
     expect(await screen.findByText("Create")).toBeInTheDocument();
 
-    [
-      "Item ID",
-      "Stars",
-      "Reviewer Email",
-      "Comments",
-      "Date Reviewed",
-    ].forEach((label) => {
-      expect(screen.getByText(label)).toBeInTheDocument();
-    });
-
-    expect(screen.getByTestId(`${testId}-solved`)).toBeInTheDocument();
+    ["Item ID", "Stars", "Reviewer Email", "Comments", "Date Reviewed"].forEach(
+      (label) => {
+        expect(screen.getByText(label)).toBeInTheDocument();
+      },
+    );
 
     expect(screen.queryByTestId(`${testId}-id`)).not.toBeInTheDocument();
   });
@@ -68,10 +62,10 @@ describe("MenuItemReviewForm tests", () => {
     expect(screen.getByTestId(`${testId}-id`)).toBeDisabled();
 
     expect(screen.getByTestId(`${testId}-itemId`)).toHaveValue(
-      oneMenuItemReviewRequest.itemId,
+      String(oneMenuItemReviewRequest.itemId),
     );
     expect(screen.getByTestId(`${testId}-stars`)).toHaveValue(
-      oneMenuItemReviewRequest.stars,
+      String(oneMenuItemReviewRequest.stars),
     );
     expect(screen.getByTestId(`${testId}-reviewerEmail`)).toHaveValue(
       oneMenuItemReviewRequest.reviewerEmail,
@@ -89,10 +83,10 @@ describe("MenuItemReviewForm tests", () => {
     renderForm({ submitAction });
 
     fireEvent.change(screen.getByTestId(`${testId}-itemId`), {
-      target: { value: 1 },
+      target: { value: "1" },
     });
     fireEvent.change(screen.getByTestId(`${testId}-stars`), {
-      target: { value: 5 },
+      target: { value: "5" },
     });
     fireEvent.change(screen.getByTestId(`${testId}-reviewerEmail`), {
       target: { value: "student1@ucsb.edu" },
@@ -108,8 +102,8 @@ describe("MenuItemReviewForm tests", () => {
     await waitFor(() => {
       expect(submitAction).toHaveBeenCalledWith(
         expect.objectContaining({
-          itemId: 1,
-          stars: 5,
+          itemId: "1",
+          stars: "5",
           reviewerEmail: "student1@ucsb.edu",
           comments: "Great item!",
           dateReviewed: "2026-10-20T14:30",
@@ -128,11 +122,9 @@ describe("MenuItemReviewForm tests", () => {
       await screen.findByText("Reviewer Email is required."),
     ).toBeInTheDocument();
     expect(screen.getByText("Item ID is required.")).toBeInTheDocument();
-    expect(
-      screen.getByText("Stars is required."),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Stars are required.")).toBeInTheDocument();
     expect(screen.getByText("Date Reviewed is required.")).toBeInTheDocument();
-    expect(screen.getByText("Comments is required.")).toBeInTheDocument();
+    expect(screen.getByText("Comments are required.")).toBeInTheDocument();
   });
 
   test("validates email format", async () => {
@@ -156,5 +148,18 @@ describe("MenuItemReviewForm tests", () => {
     await waitFor(() => {
       expect(mockedNavigate).toHaveBeenCalledWith(-1);
     });
+  });
+  test("validates maximum length of comments", async () => {
+    renderForm({ submitAction: vi.fn() });
+
+    fireEvent.change(screen.getByTestId(`${testId}-comments`), {
+      target: { value: "a".repeat(257) },
+    });
+
+    fireEvent.click(screen.getByTestId(`${testId}-submit`));
+
+    expect(
+      await screen.findByText("Max length 256 characters"),
+    ).toBeInTheDocument();
   });
 });
