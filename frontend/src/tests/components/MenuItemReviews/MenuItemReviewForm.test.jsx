@@ -202,58 +202,57 @@ describe("MenuItemReviewForm tests", () => {
     },
   );
 
-test("accepts a multi-digit integer Item ID", async () => {
-  const submitAction = vi.fn();
-  renderForm({ submitAction });
+  test("accepts a multi-digit integer Item ID", async () => {
+    const submitAction = vi.fn();
+    renderForm({ submitAction });
 
-  fireEvent.change(screen.getByTestId(`${testId}-itemId`), {
-    target: { value: "123" },
-  });
-  fireEvent.change(screen.getByTestId(`${testId}-stars`), {
-    target: { value: "5" },
-  });
-  fireEvent.change(screen.getByTestId(`${testId}-reviewerEmail`), {
-    target: { value: "student1@ucsb.edu" },
-  });
-  fireEvent.change(screen.getByTestId(`${testId}-comments`), {
-    target: { value: "Great item!" },
-  });
-  fireEvent.change(screen.getByTestId(`${testId}-dateReviewed`), {
-    target: { value: "2026-10-20T14:30" },
-  });
+    fireEvent.change(screen.getByTestId(`${testId}-itemId`), {
+      target: { value: "123" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-stars`), {
+      target: { value: "5" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-reviewerEmail`), {
+      target: { value: "student1@ucsb.edu" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-comments`), {
+      target: { value: "Great item!" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-dateReviewed`), {
+      target: { value: "2026-10-20T14:30" },
+    });
 
-  fireEvent.click(screen.getByTestId(`${testId}-submit`));
+    fireEvent.click(screen.getByTestId(`${testId}-submit`));
 
-  await waitFor(() => {
-    expect(submitAction).toHaveBeenCalled();
-  });
-});
-
-test("accepts a multi-digit integer Stars value", async () => {
-  const submitAction = vi.fn();
-  renderForm({ submitAction });
-
-  fireEvent.change(screen.getByTestId(`${testId}-itemId`), {
-    target: { value: "1" },
-  });
-  fireEvent.change(screen.getByTestId(`${testId}-stars`), {
-    target: { value: "12" },
-  });
-  fireEvent.change(screen.getByTestId(`${testId}-reviewerEmail`), {
-    target: { value: "student1@ucsb.edu" },
-  });
-  fireEvent.change(screen.getByTestId(`${testId}-comments`), {
-    target: { value: "Great item!" },
-  });
-  fireEvent.change(screen.getByTestId(`${testId}-dateReviewed`), {
-    target: { value: "2026-10-20T14:30" },
+    await waitFor(() => {
+      expect(submitAction).toHaveBeenCalled();
+    });
   });
 
-  fireEvent.click(screen.getByTestId(`${testId}-submit`));
+  test("accepts a multi-digit integer Stars value", async () => {
+    const submitAction = vi.fn();
+    renderForm({ submitAction });
 
-  await waitFor(() => {
-    expect(submitAction).toHaveBeenCalled();
+    fireEvent.change(screen.getByTestId(`${testId}-itemId`), {
+      target: { value: "1" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-stars`), {
+      target: { value: "12" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-reviewerEmail`), {
+      target: { value: "student1@ucsb.edu" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-comments`), {
+      target: { value: "Great item!" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-dateReviewed`), {
+      target: { value: "2026-10-20T14:30" },
+    });
+
+    fireEvent.click(screen.getByTestId(`${testId}-submit`));
+
+    await waitFor(() => {
+      expect(submitAction).toHaveBeenCalled();
+    });
   });
-});
-
 });
