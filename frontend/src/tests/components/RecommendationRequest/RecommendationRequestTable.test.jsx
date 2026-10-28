@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { currentUserFixtures } from "fixtures/currentUserFixtures";
 import { recommendationRequestFixtures } from "fixtures/recommendationRequestFixtures";
 import RecommendationRequestTable from "main/components/RecommendationRequest/RecommendationRequestTable";
 
@@ -70,5 +71,20 @@ describe("RecommendationRequestTable tests", () => {
         screen.getByTestId(`${testId}-cell-row-0-col-${field}`),
       ).toHaveTextContent(String(value));
     });
+  });
+
+  test("shows styled edit and delete controls for admins", () => {
+    renderTable({
+      recommendationRequests:
+        recommendationRequestFixtures.threeRecommendationRequests,
+      currentUser: currentUserFixtures.adminUser,
+    });
+
+    expect(
+      screen.getByTestId(`${testId}-cell-row-0-col-Edit-button`),
+    ).toHaveClass("btn-primary");
+    expect(
+      screen.getByTestId(`${testId}-cell-row-0-col-Delete-button`),
+    ).toHaveClass("btn-danger");
   });
 });

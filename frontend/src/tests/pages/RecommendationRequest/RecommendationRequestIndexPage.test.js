@@ -7,6 +7,7 @@ import { MemoryRouter, Route, Routes, useParams } from "react-router";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import { recommendationRequestFixtures } from "fixtures/recommendationRequestFixtures";
+import mockConsole from "tests/testutils/mockConsole";
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
@@ -53,11 +54,14 @@ describe("RecommendationRequestIndexPage tests", () => {
       .reply(200, systemInfoFixtures.showingNeither);
   };
 
-  const renderPage = (initialEntries = ["/recommendationrequest"]) =>
+  const renderPage = (
+    initialEntries = ["/recommendationrequest"],
+    queryClient = new QueryClient(),
+  ) =>
     render(
       React.createElement(
         QueryClientProvider,
-        { client: new QueryClient() },
+        { client: queryClient },
         React.createElement(
           MemoryRouter,
           { initialEntries },
@@ -87,6 +91,11 @@ describe("RecommendationRequestIndexPage tests", () => {
         screen.getByTestId(`${testId}-cell-row-0-col-id`),
       ).toHaveTextContent("1");
     });
+    const listRequest = axiosMock.history.get.find(
+      (request) => request.url === "/api/recommendationrequests/all",
+    );
+    expect(listRequest).toBeDefined();
+    expect(listRequest.method).toBe("get");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-id`)).toHaveTextContent(
       "2",
     );
@@ -118,6 +127,37 @@ describe("RecommendationRequestIndexPage tests", () => {
       "href",
       "/recommendationrequest/create",
     );
+    expect(createButton).toHaveStyle({ float: "right" });
+  });
+
+  test("does not display phantom rows when loading requests fails", async () => {
+    axiosMock.reset();
+    axiosMock.resetHistory();
+    axiosMock
+      .onGet("/api/currentUser")
+      .reply(200, apiCurrentUserFixtures.userOnly);
+    axiosMock
+      .onGet("/api/systemInfo")
+      .reply(200, systemInfoFixtures.showingNeither);
+    axiosMock.onGet("/api/recommendationrequests/all").timeout();
+    const restoreConsole = mockConsole();
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(
+        axiosMock.history.get.some(
+          (request) => request.url === "/api/recommendationrequests/all",
+        ),
+      ).toBe(true);
+    });
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId(`${testId}-cell-row-0-col-id`),
+      ).not.toBeInTheDocument();
+    });
+    restoreConsole();
   });
 
   test("admin edit button navigates to the edit URL for that request", async () => {
@@ -140,6 +180,8 @@ describe("RecommendationRequestIndexPage tests", () => {
 
   test("admin delete removes request and refreshes the table", async () => {
     setupAdminUser();
+    const queryClient = new QueryClient();
+    queryClient.setQueryData(["/api/unrelated"], "cached data");
     axiosMock
       .onGet("/api/recommendationrequests/all")
       .replyOnce(200, recommendationRequestFixtures.threeRecommendationRequests)
@@ -152,7 +194,7 @@ describe("RecommendationRequestIndexPage tests", () => {
       .onDelete("/api/recommendationrequests", { params: { id: 1 } })
       .reply(200, "record 1 deleted");
 
-    renderPage();
+    renderPage(["/recommendationrequest"], queryClient);
     const deleteButton = await screen.findByTestId(
       `${testId}-cell-row-0-col-Delete-button`,
     );
@@ -167,6 +209,9 @@ describe("RecommendationRequestIndexPage tests", () => {
           (request) => request.url === "/api/recommendationrequests/all",
         ),
       ).toHaveLength(2);
+      expect(queryClient.getQueryState(["/api/unrelated"]).isInvalidated).toBe(
+        false,
+      );
       expect(
         screen.getByTestId(`${testId}-cell-row-0-col-id`),
       ).toHaveTextContent("2");
