@@ -1,11 +1,15 @@
 import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import { helpRequestDefaultValues } from "main/components/HelpRequest/HelpRequestFormDefaults";
 
 function HelpRequestForm({
   initialContents,
   submitAction,
   buttonLabel = "Create",
+  requesterEmailRequiredMessage = "Requester Email is required.",
+  tableOrBreakoutRoomRequiredMessage = "Table or breakout room is required.",
+  requestTimeRequiredMessage = "Request time is required.",
 }) {
   // Stryker disable all
   const {
@@ -13,12 +17,13 @@ function HelpRequestForm({
     formState: { errors },
     handleSubmit,
   } = useForm({
-    defaultValues: initialContents
-      ? {
-          ...initialContents,
-          requestTime: initialContents.requestTime?.slice(0, 16) || "",
-        }
-      : { solved: false },
+    defaultValues: {
+      ...helpRequestDefaultValues,
+      ...(initialContents || {}),
+      ...(initialContents
+        ? { requestTime: initialContents.requestTime?.slice(0, 16) || "" }
+        : {}),
+    },
   });
   // Stryker restore all
 
@@ -30,7 +35,7 @@ function HelpRequestForm({
   // Stryker restore Regex
 
   return (
-    <Form onSubmit={handleSubmit(submitAction)}>
+    <Form noValidate onSubmit={handleSubmit(submitAction)}>
       {initialContents && (
         <Form.Group className="mb-3">
           <Form.Label htmlFor="id">ID</Form.Label>
@@ -47,12 +52,12 @@ function HelpRequestForm({
       <Form.Group className="mb-3">
         <Form.Label htmlFor="requesterEmail">Requester Email</Form.Label>
         <Form.Control
-          data-testid={`${testIdPrefix}-requesterEmail`}
           id="requesterEmail"
-          type="text"
+          data-testid={`${testIdPrefix}-requesterEmail`}
+          type="email"
           isInvalid={Boolean(errors.requesterEmail)}
           {...register("requesterEmail", {
-            required: "Requester Email is required.",
+            required: requesterEmailRequiredMessage,
             pattern: {
               value: emailRegex,
               message: "Enter a valid email address.",
@@ -66,8 +71,8 @@ function HelpRequestForm({
       <Form.Group className="mb-3">
         <Form.Label htmlFor="teamId">Team ID</Form.Label>
         <Form.Control
-          data-testid={`${testIdPrefix}-teamId`}
           id="teamId"
+          data-testid={`${testIdPrefix}-teamId`}
           type="text"
           isInvalid={Boolean(errors.teamId)}
           {...register("teamId", {
@@ -83,12 +88,12 @@ function HelpRequestForm({
           Table or Breakout Room
         </Form.Label>
         <Form.Control
-          data-testid={`${testIdPrefix}-tableOrBreakoutRoom`}
           id="tableOrBreakoutRoom"
+          data-testid={`${testIdPrefix}-tableOrBreakoutRoom`}
           type="text"
           isInvalid={Boolean(errors.tableOrBreakoutRoom)}
           {...register("tableOrBreakoutRoom", {
-            required: "Table or breakout room is required.",
+            required: tableOrBreakoutRoomRequiredMessage,
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -98,12 +103,12 @@ function HelpRequestForm({
       <Form.Group className="mb-3">
         <Form.Label htmlFor="requestTime">Request Time</Form.Label>
         <Form.Control
-          data-testid={`${testIdPrefix}-requestTime`}
           id="requestTime"
+          data-testid={`${testIdPrefix}-requestTime`}
           type="datetime-local"
           isInvalid={Boolean(errors.requestTime)}
           {...register("requestTime", {
-            required: "Request time is required.",
+            required: requestTimeRequiredMessage,
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -113,8 +118,8 @@ function HelpRequestForm({
       <Form.Group className="mb-3">
         <Form.Label htmlFor="explanation">Explanation</Form.Label>
         <Form.Control
-          data-testid={`${testIdPrefix}-explanation`}
           id="explanation"
+          data-testid={`${testIdPrefix}-explanation`}
           as="textarea"
           rows={3}
           isInvalid={Boolean(errors.explanation)}
@@ -128,8 +133,8 @@ function HelpRequestForm({
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Check
-          data-testid={`${testIdPrefix}-solved`}
           id="solved"
+          data-testid={`${testIdPrefix}-solved`}
           type="checkbox"
           label="Solved"
           {...register("solved")}
@@ -138,9 +143,10 @@ function HelpRequestForm({
       <Button type="submit" data-testid={`${testIdPrefix}-submit`}>
         {buttonLabel}
       </Button>
+
       <Button
-        variant="secondary"
         type="button"
+        variant="secondary"
         onClick={() => navigate(-1)}
         data-testid={`${testIdPrefix}-cancel`}
       >

@@ -1,7 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import HelpRequestTable from "main/components/HelpRequest/HelpRequestTable";
 import { MemoryRouter } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
+import HelpRequestTable from "main/components/HelpRequest/HelpRequestTable";
 
 describe("HelpRequestTable tests", () => {
   const testId = "HelpRequestTable";
@@ -16,7 +17,10 @@ describe("HelpRequestTable tests", () => {
     return render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <HelpRequestTable helpRequests={helpRequests} />
+          <HelpRequestTable
+            helpRequests={helpRequests}
+            currentUser={apiCurrentUserFixtures.userOnly}
+          />
         </MemoryRouter>
       </QueryClientProvider>,
     );
