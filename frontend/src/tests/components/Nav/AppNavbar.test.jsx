@@ -216,7 +216,7 @@ describe("AppNavbar tests", () => {
     expect(link).toHaveAttribute("href", "/helprequest");
   });
 
-  test("also renders the RecommendationRequest link correctly", async () => {
+  test("renders the RecommendationRequest link correctly", async () => {
     const currentUser = currentUserFixtures.userOnly;
     const systemInfo = systemInfoFixtures.showingBoth;
 
