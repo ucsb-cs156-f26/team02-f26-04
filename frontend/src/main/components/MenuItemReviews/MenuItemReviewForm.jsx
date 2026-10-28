@@ -47,6 +47,8 @@ function MenuItemReviewForm({
           isInvalid={Boolean(errors.itemId)}
           {...register("itemId", {
             required: "Item ID is required.",
+            validate: (value) =>
+              /^\d+$/.test(String(value)) || "Item ID must be an integer.",
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -83,6 +85,8 @@ function MenuItemReviewForm({
           isInvalid={Boolean(errors.stars)}
           {...register("stars", {
             required: "Stars are required.",
+            validate: (value) =>
+              /^\d+$/.test(String(value)) || "Stars must be an integer.",
           })}
         />
         <Form.Control.Feedback type="invalid">

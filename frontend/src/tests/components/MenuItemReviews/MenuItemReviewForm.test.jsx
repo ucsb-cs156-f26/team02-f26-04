@@ -162,4 +162,98 @@ describe("MenuItemReviewForm tests", () => {
       await screen.findByText("Max length 256 characters"),
     ).toBeInTheDocument();
   });
+  test.each([
+    ["Item ID", "itemId", "abc", "Item ID must be an integer."],
+    ["Item ID", "itemId", "1.5", "Item ID must be an integer."],
+    ["Stars", "stars", "abc", "Stars must be an integer."],
+    ["Stars", "stars", "1.5", "Stars must be an integer."],
+  ])(
+    "blocks submission when %s is invalid (%s = %s)",
+    async (_label, field, invalidValue, errorMessage) => {
+      const submitAction = vi.fn();
+      renderForm({ submitAction });
+
+      // Fill all required fields with valid values first.
+      fireEvent.change(screen.getByTestId(`${testId}-itemId`), {
+        target: { value: "1" },
+      });
+      fireEvent.change(screen.getByTestId(`${testId}-stars`), {
+        target: { value: "5" },
+      });
+      fireEvent.change(screen.getByTestId(`${testId}-reviewerEmail`), {
+        target: { value: "student1@ucsb.edu" },
+      });
+      fireEvent.change(screen.getByTestId(`${testId}-comments`), {
+        target: { value: "Great item!" },
+      });
+      fireEvent.change(screen.getByTestId(`${testId}-dateReviewed`), {
+        target: { value: "2026-10-20T14:30" },
+      });
+
+      // Replace the selected field with the invalid value.
+      fireEvent.change(screen.getByTestId(`${testId}-${field}`), {
+        target: { value: invalidValue },
+      });
+
+      fireEvent.click(screen.getByTestId(`${testId}-submit`));
+
+      expect(await screen.findByText(errorMessage)).toBeInTheDocument();
+      expect(submitAction).not.toHaveBeenCalled();
+    },
+  );
+
+test("accepts a multi-digit integer Item ID", async () => {
+  const submitAction = vi.fn();
+  renderForm({ submitAction });
+
+  fireEvent.change(screen.getByTestId(`${testId}-itemId`), {
+    target: { value: "123" },
+  });
+  fireEvent.change(screen.getByTestId(`${testId}-stars`), {
+    target: { value: "5" },
+  });
+  fireEvent.change(screen.getByTestId(`${testId}-reviewerEmail`), {
+    target: { value: "student1@ucsb.edu" },
+  });
+  fireEvent.change(screen.getByTestId(`${testId}-comments`), {
+    target: { value: "Great item!" },
+  });
+  fireEvent.change(screen.getByTestId(`${testId}-dateReviewed`), {
+    target: { value: "2026-10-20T14:30" },
+  });
+
+  fireEvent.click(screen.getByTestId(`${testId}-submit`));
+
+  await waitFor(() => {
+    expect(submitAction).toHaveBeenCalled();
+  });
+});
+
+test("accepts a multi-digit integer Stars value", async () => {
+  const submitAction = vi.fn();
+  renderForm({ submitAction });
+
+  fireEvent.change(screen.getByTestId(`${testId}-itemId`), {
+    target: { value: "1" },
+  });
+  fireEvent.change(screen.getByTestId(`${testId}-stars`), {
+    target: { value: "12" },
+  });
+  fireEvent.change(screen.getByTestId(`${testId}-reviewerEmail`), {
+    target: { value: "student1@ucsb.edu" },
+  });
+  fireEvent.change(screen.getByTestId(`${testId}-comments`), {
+    target: { value: "Great item!" },
+  });
+  fireEvent.change(screen.getByTestId(`${testId}-dateReviewed`), {
+    target: { value: "2026-10-20T14:30" },
+  });
+
+  fireEvent.click(screen.getByTestId(`${testId}-submit`));
+
+  await waitFor(() => {
+    expect(submitAction).toHaveBeenCalled();
+  });
+});
+
 });
