@@ -302,6 +302,30 @@ describe("AppNavbar tests", () => {
     expect(link.getAttribute("href")).toBe("/articles");
   });
 
+<<<<<<< HEAD
+=======
+  test("also renders the RecommendationRequest link correctly", async () => {
+    const currentUser = currentUserFixtures.userOnly;
+    const systemInfo = systemInfoFixtures.showingBoth;
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AppNavbar
+            currentUser={currentUser}
+            systemInfo={systemInfo}
+            doLogout={vi.fn()}
+          />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    const link = await screen.findByText("RecommendationRequest");
+    expect(link).toBeInTheDocument();
+    expect(link.getAttribute("href")).toBe("/recommendationrequest");
+  });
+
+>>>>>>> 29ba120c (Fixed duplcate tests)
   test("Restaurant, Articles and UCSBDates links do NOT show when not logged in", async () => {
     const currentUser = null;
     const systemInfo = systemInfoFixtures.showingBoth;
