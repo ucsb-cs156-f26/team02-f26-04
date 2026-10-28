@@ -109,7 +109,9 @@ describe("MenuItemReviewCreatePage tests", () => {
     });
     fireEvent.change(starsInput, { target: { value: 4 } });
     fireEvent.change(commentsInput, { target: { value: "Great food!" } });
-    fireEvent.change(dateReviewedInput, { target: { value: "2022-01-02T12:00:00" } });
+    fireEvent.change(dateReviewedInput, {
+      target: { value: "2022-01-02T12:00:00" },
+    });
     fireEvent.click(createButton);
 
     await waitFor(() => expect(axiosMock.history.post.length).toBe(1));
