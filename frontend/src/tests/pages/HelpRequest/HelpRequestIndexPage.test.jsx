@@ -96,7 +96,7 @@ describe("HelpRequestIndexPage tests", () => {
     });
 
     // Verify all column headers.
-    expect(screen.getByText("id")).toBeInTheDocument();
+    expect(screen.getByText("ID")).toBeInTheDocument();
     expect(screen.getByText("Requester Email")).toBeInTheDocument();
     expect(screen.getByText("Team ID")).toBeInTheDocument();
     expect(screen.getByText("Table or Breakout Room")).toBeInTheDocument();

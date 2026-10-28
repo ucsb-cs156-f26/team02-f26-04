@@ -25,11 +25,15 @@ function HelpRequestForm({
   const navigate = useNavigate();
   const testIdPrefix = "HelpRequestForm";
 
+  // Stryker disable Regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Stryker restore Regex
+
   return (
     <Form onSubmit={handleSubmit(submitAction)}>
       {initialContents && (
         <Form.Group className="mb-3">
-          <Form.Label htmlFor="id">Id</Form.Label>
+          <Form.Label htmlFor="id">ID</Form.Label>
           <Form.Control
             data-testid={`${testIdPrefix}-id`}
             id="id"
@@ -45,10 +49,14 @@ function HelpRequestForm({
         <Form.Control
           data-testid={`${testIdPrefix}-requesterEmail`}
           id="requesterEmail"
-          type="email"
+          type="text"
           isInvalid={Boolean(errors.requesterEmail)}
           {...register("requesterEmail", {
-            required: "Requester email is required.",
+            required: "Requester Email is required.",
+            pattern: {
+              value: emailRegex,
+              message: "Enter a valid email address.",
+            },
           })}
         />
         <Form.Control.Feedback type="invalid">

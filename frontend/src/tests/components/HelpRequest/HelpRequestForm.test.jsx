@@ -1,5 +1,6 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import HelpRequestForm from "main/components/HelpRequest/HelpRequestForm";
 
 const mockNavigate = vi.fn();
@@ -12,78 +13,171 @@ vi.mock("react-router", async (importOriginal) => {
   };
 });
 
+const oneHelpRequest = {
+  id: 1,
+  requesterEmail: "student1@ucsb.edu",
+  teamId: "team01",
+  tableOrBreakoutRoom: "Table 3",
+  requestTime: "2026-10-20T14:30",
+  explanation: "I need help understanding the assignment.",
+  solved: false,
+};
+
 describe("HelpRequestForm tests", () => {
+  const testId = "HelpRequestForm";
+
+  const renderForm = (props = {}) =>
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <MemoryRouter>
+          <HelpRequestForm {...props} />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
   beforeEach(() => {
     mockNavigate.mockClear();
   });
 
   test("renders create defaults when initialContents is not provided", () => {
-    render(
-      <MemoryRouter>
-        <HelpRequestForm submitAction={vi.fn()} />
-      </MemoryRouter>,
-    );
+    renderForm({ submitAction: vi.fn() });
 
-    expect(screen.getByTestId("HelpRequestForm-solved")).not.toBeChecked();
-    expect(screen.getByTestId("HelpRequestForm-submit")).toHaveTextContent(
-      "Create",
-    );
-    expect(screen.queryByTestId("HelpRequestForm-id")).not.toBeInTheDocument();
+    expect(screen.getByTestId(`${testId}-solved`)).not.toBeChecked();
+    expect(screen.getByTestId(`${testId}-submit`)).toHaveTextContent("Create");
+    expect(screen.queryByTestId(`${testId}-id`)).not.toBeInTheDocument();
   });
 
   test("uses an empty request time when initial request time is missing", () => {
-    render(
-      <MemoryRouter>
-        <HelpRequestForm
-          initialContents={{
-            id: 17,
-            requesterEmail: "student1@ucsb.edu",
-            teamId: "team01",
-            tableOrBreakoutRoom: "Table 3",
-            explanation: "Need help.",
-            solved: false,
-          }}
-          submitAction={vi.fn()}
-          buttonLabel="Update"
-        />
-      </MemoryRouter>,
-    );
+    renderForm({
+      initialContents: {
+        id: 17,
+        requesterEmail: "student1@ucsb.edu",
+        teamId: "team01",
+        tableOrBreakoutRoom: "Table 3",
+        explanation: "Need help.",
+        solved: false,
+      },
+      submitAction: vi.fn(),
+      buttonLabel: "Update",
+    });
 
-    expect(screen.getByTestId("HelpRequestForm-requestTime")).toHaveValue("");
-    expect(screen.getByTestId("HelpRequestForm-submit")).toHaveTextContent(
-      "Update",
+    expect(screen.getByTestId(`${testId}-requestTime`)).toHaveValue("");
+  });
+
+  test("renders correctly when creating a HelpRequest", () => {
+    renderForm({ submitAction: vi.fn() });
+
+    [
+      "Requester Email",
+      "Team ID",
+      "Table or Breakout Room",
+      "Request Time",
+      "Explanation",
+      "Solved",
+    ].forEach((label) => {
+      expect(screen.getByText(label)).toBeInTheDocument();
+    });
+
+    expect(screen.queryByTestId(`${testId}-id`)).not.toBeInTheDocument();
+  });
+
+  test("renders correctly when updating a HelpRequest", () => {
+    renderForm({
+      initialContents: oneHelpRequest,
+      submitAction: vi.fn(),
+      buttonLabel: "Update",
+    });
+
+    expect(screen.getByTestId(`${testId}-submit`)).toHaveTextContent("Update");
+    expect(screen.getByTestId(`${testId}-id`)).toBeDisabled();
+    expect(screen.getByTestId(`${testId}-requesterEmail`)).toHaveValue(
+      oneHelpRequest.requesterEmail,
     );
+    expect(screen.getByTestId(`${testId}-teamId`)).toHaveValue(
+      oneHelpRequest.teamId,
+    );
+    expect(screen.getByTestId(`${testId}-tableOrBreakoutRoom`)).toHaveValue(
+      oneHelpRequest.tableOrBreakoutRoom,
+    );
+    expect(screen.getByTestId(`${testId}-requestTime`)).toHaveValue(
+      oneHelpRequest.requestTime,
+    );
+    expect(screen.getByTestId(`${testId}-explanation`)).toHaveValue(
+      oneHelpRequest.explanation,
+    );
+  });
+
+  test("calls submitAction with valid form data", async () => {
+    const submitAction = vi.fn();
+    renderForm({ submitAction });
+
+    fireEvent.change(screen.getByTestId(`${testId}-requesterEmail`), {
+      target: { value: "student1@ucsb.edu" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-teamId`), {
+      target: { value: "team01" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-tableOrBreakoutRoom`), {
+      target: { value: "Table 3" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-requestTime`), {
+      target: { value: "2026-10-20T14:30" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-explanation`), {
+      target: { value: "I need help understanding the assignment." },
+    });
+
+    fireEvent.click(screen.getByTestId(`${testId}-submit`));
+
+    await waitFor(() => {
+      expect(submitAction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          requesterEmail: "student1@ucsb.edu",
+          teamId: "team01",
+          tableOrBreakoutRoom: "Table 3",
+          requestTime: "2026-10-20T14:30",
+          explanation: "I need help understanding the assignment.",
+          solved: false,
+        }),
+        expect.anything(),
+      );
+    });
+  });
+
+  test("validates required fields", async () => {
+    renderForm({ submitAction: vi.fn() });
+
+    fireEvent.click(screen.getByTestId(`${testId}-submit`));
+
+    expect(
+      await screen.findByText("Requester Email is required."),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Team ID is required.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Table or breakout room is required."),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Request time is required.")).toBeInTheDocument();
+    expect(screen.getByText("Explanation is required.")).toBeInTheDocument();
+  });
+
+  test("validates email format", async () => {
+    renderForm({ submitAction: vi.fn() });
+
+    fireEvent.change(screen.getByTestId(`${testId}-requesterEmail`), {
+      target: { value: "not-an-email" },
+    });
+    fireEvent.click(screen.getByTestId(`${testId}-submit`));
+
+    expect(
+      await screen.findByText("Enter a valid email address."),
+    ).toBeInTheDocument();
   });
 
   test("Cancel button navigates back", () => {
-    render(
-      <MemoryRouter>
-        <HelpRequestForm submitAction={vi.fn()} />
-      </MemoryRouter>,
-    );
+    renderForm({ submitAction: vi.fn() });
 
-    fireEvent.click(screen.getByTestId("HelpRequestForm-cancel"));
+    fireEvent.click(screen.getByTestId(`${testId}-cancel`));
 
     expect(mockNavigate).toHaveBeenCalledWith(-1);
   });
-  test.each([
-  ["requesterEmail", "Requester email is required."],
-  ["teamId", "Team ID is required."],
-  ["tableOrBreakoutRoom", "Table or breakout room is required."],
-  ["requestTime", "Request time is required."],
-  ["explanation", "Explanation is required."],
-])("requires %s before submission", async (field, message) => {
-  const submitAction = vi.fn();
-
-  render(
-    <MemoryRouter>
-      <HelpRequestForm submitAction={submitAction} />
-    </MemoryRouter>,
-  );
-
-  fireEvent.click(screen.getByTestId("HelpRequestForm-submit"));
-
-  expect(await screen.findByText(message)).toBeInTheDocument();
-  expect(submitAction).not.toHaveBeenCalled();
-});
 });

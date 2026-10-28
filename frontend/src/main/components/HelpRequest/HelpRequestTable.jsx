@@ -33,7 +33,7 @@ export default function HelpRequestTable({
   };
 
   const columns = [
-    { header: "id", accessorKey: "id" },
+    { header: "ID", accessorKey: "id" },
     { header: "Requester Email", accessorKey: "requesterEmail" },
     { header: "Team ID", accessorKey: "teamId" },
     { header: "Table or Breakout Room", accessorKey: "tableOrBreakoutRoom" },
