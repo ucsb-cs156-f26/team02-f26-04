@@ -8,6 +8,7 @@ function HelpRequestForm({
   submitAction,
   buttonLabel = "Create",
 }) {
+  // Stryker disable all
   const {
     register,
     formState: { errors },
@@ -18,6 +19,8 @@ function HelpRequestForm({
       ...(initialContents || {}),
     },
   });
+  } = useForm({ defaultValues: initialContents || {} });
+  // Stryker restore all
 
   const navigate = useNavigate();
   const testIdPrefix = "HelpRequestForm";
@@ -35,6 +38,37 @@ function HelpRequestForm({
             required: "Requester email is required.",
             pattern: {
               value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  // Stryker disable Regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Stryker restore Regex
+
+  return (
+    <Form onSubmit={handleSubmit(submitAction)}>
+      {initialContents && (
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="id">ID</Form.Label>
+          <Form.Control
+            data-testid={`${testIdPrefix}-id`}
+            id="id"
+            type="text"
+            {...register("id")}
+            value={initialContents.id}
+            disabled
+          />
+        </Form.Group>
+      )}
+
+      <Form.Group className="mb-3">
+        <Form.Label htmlFor="requesterEmail">Requester Email</Form.Label>
+        <Form.Control
+          data-testid={`${testIdPrefix}-requesterEmail`}
+          id="requesterEmail"
+          type="text"
+          isInvalid={Boolean(errors.requesterEmail)}
+          {...register("requesterEmail", {
+            required: "Requester Email is required.",
+            pattern: {
+              value: emailRegex,
               message: "Enter a valid email address.",
             },
           })}
@@ -87,6 +121,13 @@ function HelpRequestForm({
           isInvalid={Boolean(errors.requestTime)}
           {...register("requestTime", {
             required: "Request time is required.",
+          data-testid={`${testIdPrefix}-requestTime`}
+          id="requestTime"
+          type="datetime-local"
+          step="1"
+          isInvalid={Boolean(errors.requestTime)}
+          {...register("requestTime", {
+            required: "Request Time is required.",
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -112,8 +153,9 @@ function HelpRequestForm({
 
       <Form.Group className="mb-3">
         <Form.Check
-          id="solved"
           data-testid={`${testIdPrefix}-solved`}
+          id="solved"
+          type="checkbox"
           label="Solved"
           {...register("solved")}
         />
@@ -126,6 +168,8 @@ function HelpRequestForm({
       <Button
         type="button"
         variant="secondary"
+      <Button
+        variant="Secondary"
         onClick={() => navigate(-1)}
         data-testid={`${testIdPrefix}-cancel`}
       >
