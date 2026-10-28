@@ -29,7 +29,7 @@ export default function MenuItemReviewIndexPage() {
           href="/menu-item-reviews/create"
           style={{ float: "right" }}
         >
-          Create Menu Item Review
+          Create MenuItemReview
         </Button>
       );
     }
@@ -39,8 +39,11 @@ export default function MenuItemReviewIndexPage() {
     <BasicLayout>
       <div className="pt-2">
         {createButton()}
-        <h1>Menu Item Reviews</h1>
-        <MenuItemReviewTable menuItemReviews={menuItemReviews} currentUser={currentUser} />
+        <h1>MenuItemReviews</h1>
+        <MenuItemReviewTable
+          menuItemReviews={menuItemReviews}
+          currentUser={currentUser}
+        />
       </div>
     </BasicLayout>
   );
