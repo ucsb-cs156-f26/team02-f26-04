@@ -4,6 +4,7 @@ import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import { http, HttpResponse } from "msw";
 
 import MenuItemReviewCreatePage from "main/pages/MenuItemReviews/MenuItemReviewCreatePage";
+import menuItemReviewFixtures from "fixtures/menuItemReviewFixtures";
 
 export default {
   title: "pages/MenuItemReviews/MenuItemReviewCreatePage",
