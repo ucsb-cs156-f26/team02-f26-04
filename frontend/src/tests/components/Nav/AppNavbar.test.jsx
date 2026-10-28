@@ -209,7 +209,7 @@ describe("AppNavbar tests", () => {
     );
 
     const link = await screen.findByRole("link", {
-      name: "HelpRequest",
+      name: "Help Requests",
     });
 
     expect(link).toBeInTheDocument();
@@ -236,7 +236,31 @@ describe("AppNavbar tests", () => {
     expect(link).toHaveAttribute("href", "/ucsborganization");
   });
 
-  test("Restaurant and UCSBDates links do NOT show when not logged in", async () => {
+  test("renders the articles link correctly", async () => {
+    const currentUser = currentUserFixtures.userOnly;
+    const systemInfo = systemInfoFixtures.showingBoth;
+
+    const doLogin = vi.fn();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AppNavbar
+            currentUser={currentUser}
+            systemInfo={systemInfo}
+            doLogin={doLogin}
+          />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    await screen.findByText("Articles");
+    const link = screen.getByText("Articles");
+    expect(link).toBeInTheDocument();
+    expect(link.getAttribute("href")).toBe("/articles");
+  });
+
+  test("Restaurant, Articles and UCSBDates links do NOT show when not logged in", async () => {
     const currentUser = null;
     const systemInfo = systemInfoFixtures.showingBoth;
     const doLogin = vi.fn();
@@ -255,6 +279,7 @@ describe("AppNavbar tests", () => {
 
     expect(screen.queryByText("Restaurants")).not.toBeInTheDocument();
     expect(screen.queryByText("UCSBDates")).not.toBeInTheDocument();
+    expect(screen.queryByText("Articles")).not.toBeInTheDocument();
     // Logged-out users should not see the menu item link.
     expect(
       screen.queryByRole("link", { name: "UCSBDiningCommonsMenuItem" }),
