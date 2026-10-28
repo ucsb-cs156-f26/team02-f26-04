@@ -182,4 +182,92 @@ describe("HelpRequestEditPage tests", () => {
       solved: true,
     });
   });
+
+  test("renders and populates the form with the existing HelpRequest", async () => {
+    axiosMock
+      .onGet("/api/HelpRequest", { params: { id: 17 } })
+      .reply(200, helpRequest);
+
+    renderPage();
+
+    const emailField = await screen.findByTestId(
+      "HelpRequestForm-requesterEmail",
+    );
+
+    expect(screen.getByTestId("HelpRequestForm-id")).toHaveValue("17");
+    expect(emailField).toHaveValue("student1@ucsb.edu");
+    expect(screen.getByTestId("HelpRequestForm-teamId")).toHaveValue("team01");
+    expect(
+      screen.getByTestId("HelpRequestForm-tableOrBreakoutRoom"),
+    ).toHaveValue("Table 3");
+    expect(screen.getByTestId("HelpRequestForm-requestTime")).toHaveValue(
+      "2026-10-20T14:30",
+    );
+    expect(screen.getByTestId("HelpRequestForm-explanation")).toHaveValue(
+      "I need help understanding the assignment.",
+    );
+    expect(screen.getByTestId("HelpRequestForm-solved")).not.toBeChecked();
+    expect(screen.getByTestId("HelpRequestForm-submit")).toHaveTextContent(
+      "Update",
+    );
+  });
+
+  test("submits updated data, shows a toast, and redirects", async () => {
+    axiosMock
+      .onGet("/api/HelpRequest", { params: { id: 17 } })
+      .reply(200, helpRequest);
+
+    axiosMock.onPut("/api/HelpRequest").reply(200, {
+      ...helpRequest,
+      requesterEmail: "student2@ucsb.edu",
+      teamId: "team02",
+      tableOrBreakoutRoom: "Breakout Room A",
+      requestTime: "2026-10-21T15:00",
+      explanation: "Updated explanation",
+      solved: true,
+    });
+
+    renderPage();
+
+    const emailField = await screen.findByTestId(
+      "HelpRequestForm-requesterEmail",
+    );
+
+    fireEvent.change(emailField, {
+      target: { value: "student2@ucsb.edu" },
+    });
+    fireEvent.change(screen.getByTestId("HelpRequestForm-teamId"), {
+      target: { value: "team02" },
+    });
+    fireEvent.change(
+      screen.getByTestId("HelpRequestForm-tableOrBreakoutRoom"),
+      {
+        target: { value: "Breakout Room A" },
+      },
+    );
+    fireEvent.change(screen.getByTestId("HelpRequestForm-requestTime"), {
+      target: { value: "2026-10-21T15:00" },
+    });
+    fireEvent.change(screen.getByTestId("HelpRequestForm-explanation"), {
+      target: { value: "Updated explanation" },
+    });
+    fireEvent.click(screen.getByTestId("HelpRequestForm-solved"));
+    fireEvent.click(screen.getByTestId("HelpRequestForm-submit"));
+
+    await waitFor(() => expect(mockToast).toHaveBeenCalled());
+
+    expect(mockToast).toHaveBeenCalledWith("HelpRequest Updated - id: 17");
+    expect(mockNavigate).toHaveBeenCalledWith({ to: "/helprequest" });
+
+    expect(axiosMock.history.put).toHaveLength(1);
+    expect(axiosMock.history.put[0].params).toEqual({ id: 17 });
+    expect(JSON.parse(axiosMock.history.put[0].data)).toEqual({
+      requesterEmail: "student2@ucsb.edu",
+      teamId: "team02",
+      tableOrBreakoutRoom: "Breakout Room A",
+      requestTime: "2026-10-21T15:00",
+      explanation: "Updated explanation",
+      solved: true,
+    });
+  });
 });
