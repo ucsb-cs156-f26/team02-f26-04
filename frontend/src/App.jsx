@@ -14,6 +14,7 @@ import RestaurantEditPage from "main/pages/Restaurants/RestaurantEditPage";
 import RecommendationRequestIndexPage from "main/pages/RecommendationRequest/RecommendationRequestIndexPage";
 import RecommendationRequestCreatePage from "main/pages/RecommendationRequest/RecommendationRequestCreatePage";
 import RecommendationRequestEditPage from "main/pages/RecommendationRequest/RecommendationRequestEditPage";
+
 import ArticlesIndexPage from "main/pages/Articles/ArticlesIndexPage";
 import ArticlesCreatePage from "main/pages/Articles/ArticlesCreatePage";
 import ArticlesEditPage from "main/pages/Articles/ArticlesEditPage";
@@ -29,6 +30,7 @@ import PlaceholderEditPage from "main/pages/Placeholder/PlaceholderEditPage";
 import MenuItemReviewIndexPage from "main/pages/MenuItemReviews/MenuItemReviewIndexPage";
 import MenuItemReviewCreatePage from "main/pages/MenuItemReviews/MenuItemReviewCreatePage";
 import MenuItemReviewEditPage from "main/pages/MenuItemReviews/MenuItemReviewEditPage";
+
 import HelpRequestIndexPage from "main/pages/HelpRequest/HelpRequestIndexPage";
 import HelpRequestCreatePage from "main/pages/HelpRequest/HelpRequestCreatePage";
 import HelpRequestEditPage from "main/pages/HelpRequest/HelpRequestEditPage";
@@ -36,18 +38,15 @@ import HelpRequestEditPage from "main/pages/HelpRequest/HelpRequestEditPage";
 import UCSBOrganizationIndexPage from "main/pages/UCSBOrganization/UCSBOrganizationIndexPage";
 import UCSBOrganizationCreatePage from "main/pages/UCSBOrganization/UCSBOrganizationCreatePage";
 import UCSBOrganizationEditPage from "main/pages/UCSBOrganization/UCSBOrganizationEditPage";
-import MenuItemReviewIndexPage from "main/pages/MenuItemReviews/MenuItemReviewIndexPage";
-import MenuItemReviewCreatePage from "main/pages/MenuItemReviews/MenuItemReviewCreatePage";
-import MenuItemReviewEditPage from "main/pages/MenuItemReviews/MenuItemReviewEditPage";
-
-import MenuItemReviewIndexPage from "main/pages/MenuItemReviews/MenuItemReviewIndexPage";
-import MenuItemReviewCreatePage from "main/pages/MenuItemReviews/MenuItemReviewCreatePage";
-import MenuItemReviewEditPage from "main/pages/MenuItemReviews/MenuItemReviewEditPage";
 
 import { hasRole, useCurrentUser } from "main/utils/useCurrentUser";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "react-toastify/dist/ReactToastify.css";
+
+import UCSBDiningCommonsMenuItemIndexPage from "main/pages/UCSBDiningCommonsMenuItem/UCSBDiningCommonsMenuItemIndexPage";
+import UCSBDiningCommonsMenuItemCreatePage from "main/pages/UCSBDiningCommonsMenuItem/UCSBDiningCommonsMenuItemCreatePage";
+import UCSBDiningCommonsMenuItemEditPage from "main/pages/UCSBDiningCommonsMenuItem/UCSBDiningCommonsMenuItemEditPage";
 
 function App() {
   const currentUser = useCurrentUser();
@@ -87,6 +86,27 @@ function App() {
       {hasRole(currentUser, "ROLE_ADMIN") && (
         <Route exact path="/admin/users" element={<AdminUsersPage />} />
       )}
+
+      {hasRole(currentUser, "ROLE_USER") && (
+        <>
+          <Route exact path="/ucsbdates" element={<UCSBDatesIndexPage />} />
+          <Route exact path="/restaurants" element={<RestaurantIndexPage />} />
+          <Route exact path="/placeholder" element={<PlaceholderIndexPage />} />
+          <Route exact path="/helprequest" element={<HelpRequestIndexPage />} />
+          <Route
+            exact
+            path="/ucsborganization"
+            element={<UCSBOrganizationIndexPage />}
+          />
+          <Route
+            exact
+            path="/diningcommonsmenuitem"
+            element={<UCSBDiningCommonsMenuItemIndexPage />}
+          />
+          <Route exact path="/articles" element={<ArticlesIndexPage />} />
+        </>
+      )}
+
       {hasRole(currentUser, "ROLE_ADMIN") && (
         <>
           <Route exact path="/admin/users" element={<AdminUsersPage />} />
@@ -210,6 +230,46 @@ function App() {
             exact
             path="/recommendationrequest/create"
             element={<RecommendationRequestCreatePage />}
+          />
+          <Route
+            exact
+            path="/helprequest/edit/:id"
+            element={<HelpRequestEditPage />}
+          />
+          <Route
+            exact
+            path="/helprequest/create"
+            element={<HelpRequestCreatePage />}
+          />
+          <Route
+            exact
+            path="/ucsborganization/edit/:id"
+            element={<UCSBOrganizationEditPage />}
+          />
+          <Route
+            exact
+            path="/ucsborganization/create"
+            element={<UCSBOrganizationCreatePage />}
+          />
+          <Route
+            exact
+            path="/placeholder/edit/:id"
+            element={<PlaceholderEditPage />}
+          />
+          <Route
+            exact
+            path="/placeholder/create"
+            element={<PlaceholderCreatePage />}
+          />
+          <Route
+            exact
+            path="/diningcommonsmenuitem/create"
+            element={<UCSBDiningCommonsMenuItemCreatePage />}
+          />
+          <Route
+            exact
+            path="/diningcommonsmenuitem/edit/:id"
+            element={<UCSBDiningCommonsMenuItemEditPage />}
           />
           <Route
             exact
