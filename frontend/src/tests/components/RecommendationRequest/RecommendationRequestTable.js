@@ -1,4 +1,5 @@
 import { fireEvent, render, waitFor, screen } from "@testing-library/react";
+import { describe, expect, test, vi } from "vitest";
 import { restaurantFixtures } from "fixtures/restaurantFixtures";
 import RestaurantTable from "main/components/Restaurants/RestaurantTable";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
