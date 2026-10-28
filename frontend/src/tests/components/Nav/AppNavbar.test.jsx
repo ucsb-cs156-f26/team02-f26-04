@@ -281,7 +281,7 @@ describe("AppNavbar tests", () => {
     expect(link.getAttribute("href")).toBe("/articles");
   });
 
-  test("renders the RecommendationRequest link correctly", async () => {
+  test("also renders the RecommendationRequest link correctly", async () => {
     const currentUser = currentUserFixtures.userOnly;
     const systemInfo = systemInfoFixtures.showingBoth;
 
