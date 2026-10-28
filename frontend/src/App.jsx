@@ -18,6 +18,9 @@ import RecommendationRequestEditPage from "main/pages/RecommendationRequest/Reco
 import ArticlesIndexPage from "main/pages/Articles/ArticlesIndexPage";
 import ArticlesCreatePage from "main/pages/Articles/ArticlesCreatePage";
 import ArticlesEditPage from "main/pages/Articles/ArticlesEditPage";
+import RecommendationRequestIndexPage from "main/pages/RecommendationRequest/RecommendationRequestIndexPage";
+import RecommendationRequestCreatePage from "main/pages/RecommendationRequest/RecommendationRequestCreatePage";
+import RecommendationRequestEditPage from "main/pages/RecommendationRequest/RecommendationRequestEditPage";
 
 import ArticlesIndexPage from "main/pages/Articles/ArticlesIndexPage";
 import ArticlesCreatePage from "main/pages/Articles/ArticlesCreatePage";
@@ -236,11 +239,10 @@ function App() {
             path="/recommendationrequest/create"
             element={<RecommendationRequestCreatePage />}
           />
-          <Route
-            exact
-            path="/helprequest/edit/:id"
-            element={<HelpRequestEditPage />}
-          />
+        </>
+      )}
+      {hasRole(currentUser, "ROLE_ADMIN") && (
+        <>
           <Route
             exact
             path="/placeholder/edit/:id"
