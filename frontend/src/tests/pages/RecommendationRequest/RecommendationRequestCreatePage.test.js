@@ -1,0 +1,53 @@
+import { render, screen } from "@testing-library/react";
+import React from "react";
+import RecommendationRequestCreatePage from "main/pages/RecommendationRequest/RecommendationRequestCreatePage";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MemoryRouter } from "react-router";
+
+import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
+import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
+import axios from "axios";
+import AxiosMockAdapter from "axios-mock-adapter";
+import { expect } from "vitest";
+
+describe("RecommendationRequestCreatePage tests", () => {
+  const axiosMock = new AxiosMockAdapter(axios);
+
+  const setupUserOnly = () => {
+    axiosMock.reset();
+    axiosMock.resetHistory();
+    axiosMock
+      .onGet("/api/currentUser")
+      .reply(200, apiCurrentUserFixtures.userOnly);
+    axiosMock
+      .onGet("/api/systemInfo")
+      .reply(200, systemInfoFixtures.showingNeither);
+  };
+
+  const queryClient = new QueryClient();
+  test("Renders expected content", async () => {
+    // arrange
+
+    setupUserOnly();
+
+    // act
+    render(
+      React.createElement(
+        QueryClientProvider,
+        { client: queryClient },
+        React.createElement(
+          MemoryRouter,
+          null,
+          React.createElement(RecommendationRequestCreatePage),
+        ),
+      ),
+    );
+
+    // assert
+
+    await screen.findByText("Create page not yet implemented");
+    expect(
+      screen.getByText("Create page not yet implemented"),
+    ).toBeInTheDocument();
+  });
+});
