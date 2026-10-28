@@ -237,6 +237,7 @@ describe("AppNavbar tests", () => {
   });
 
   test("renders the RecommendationRequest link correctly", async () => {
+  test("renders the RecommendationRequest link when doLogout is provided", async () => {
     const currentUser = currentUserFixtures.userOnly;
     const systemInfo = systemInfoFixtures.showingBoth;
 
