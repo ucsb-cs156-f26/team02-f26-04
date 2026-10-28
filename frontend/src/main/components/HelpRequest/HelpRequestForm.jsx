@@ -129,7 +129,7 @@ function HelpRequestForm({
       </Form.Group>
       <Button type="submit" data-testid={`${testIdPrefix}-submit`}>
         {buttonLabel}
-      </Button>{" "}
+      </Button>
       <Button
         variant="secondary"
         type="button"

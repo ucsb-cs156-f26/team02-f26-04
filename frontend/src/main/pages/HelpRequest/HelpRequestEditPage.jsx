@@ -14,7 +14,9 @@ export default function HelpRequestEditPage({ storybook = false }) {
   } = useBackend(
     // Stryker disable next-line all : don't test internal caching of React Query
     [`/api/HelpRequest?id=${id}`],
+
     {
+      // Stryker disable next-line all : GET is the default, so mutating this to "" doesn't introduce a bug
       method: "GET",
       url: "/api/HelpRequest",
       params: { id },
