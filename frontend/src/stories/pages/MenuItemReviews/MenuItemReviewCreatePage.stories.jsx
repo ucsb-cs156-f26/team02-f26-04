@@ -26,16 +26,19 @@ Default.parameters = {
       });
     }),
     http.post("/api/menu-item-reviews/post", () => {
-      return HttpResponse.json({
-    id: 1,
-    itemId: 1,
-    stars: 5,
-    reviewerEmail: "reviewer@example.com",
-    dateReviewed: "2022-01-02T12:00:00",
-    comments: "Excellent item!",
-  }, {
-        status: 200,
-      });
+      return HttpResponse.json(
+        {
+          id: 1,
+          itemId: 1,
+          stars: 5,
+          reviewerEmail: "reviewer@example.com",
+          dateReviewed: "2022-01-02T12:00:00",
+          comments: "Excellent item!",
+        },
+        {
+          status: 200,
+        },
+      );
     }),
   ],
 };
