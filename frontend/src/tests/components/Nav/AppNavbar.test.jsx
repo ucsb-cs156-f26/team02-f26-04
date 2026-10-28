@@ -213,6 +213,7 @@ describe("AppNavbar tests", () => {
   });
 
   test("renders the RecommendationRequest link correctly", async () => {
+  test("renders the UCSBOrganization link correctly", async () => {
     const currentUser = currentUserFixtures.userOnly;
     const systemInfo = systemInfoFixtures.showingBoth;
 
@@ -224,6 +225,7 @@ describe("AppNavbar tests", () => {
             systemInfo={systemInfo}
             doLogout={vi.fn()}
           />
+          <AppNavbar currentUser={currentUser} systemInfo={systemInfo} />
         </MemoryRouter>
       </QueryClientProvider>,
     );
@@ -231,6 +233,12 @@ describe("AppNavbar tests", () => {
     const link = await screen.findByText("RecommendationRequest");
     expect(link).toBeInTheDocument();
     expect(link.getAttribute("href")).toBe("/recommendationrequest");
+    const link = await screen.findByRole("link", {
+      name: "UCSBOrganization",
+    });
+
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/ucsborganization");
   });
 
   test("Restaurant and UCSBDates links do NOT show when not logged in", async () => {
