@@ -47,7 +47,7 @@ describe("MenuItemReviewEditPage tests", () => {
         .onGet("/api/systemInfo")
         .reply(200, systemInfoFixtures.showingNeither);
       axiosMock
-        .onGet("/api/menu-item-reviews", { params: { id: 17 } })
+        .onGet("/api/menuitemreviews", { params: { id: 17 } })
         .timeout();
     });
 
@@ -89,7 +89,7 @@ describe("MenuItemReviewEditPage tests", () => {
         .onGet("/api/systemInfo")
         .reply(200, systemInfoFixtures.showingNeither);
       axiosMock
-        .onGet("/api/menu-item-reviews", { params: { id: 17 } })
+        .onGet("/api/menuitemreviews", { params: { id: 17 } })
         .reply(200, {
           id: 17,
           itemId: 1,
@@ -98,7 +98,7 @@ describe("MenuItemReviewEditPage tests", () => {
           comments: "Great food!",
           dateReviewed: "2023-01-01T00:00",
         });
-      axiosMock.onPut("/api/menu-item-reviews").reply(200, {
+      axiosMock.onPut("/api/menuitemreviews").reply(200, {
         id: "17",
         itemId: 1,
         reviewerEmail: "test@example.com",
@@ -176,7 +176,7 @@ describe("MenuItemReviewEditPage tests", () => {
         "MenuItemReview Updated - id: 17 itemId: 1 reviewerEmail: test@example.com stars: 5 comments: Great food! dateReviewed: 2023-01-01T00:00",
       );
 
-      expect(mockNavigate).toHaveBeenCalledWith({ to: "/menu-item-reviews" });
+      expect(mockNavigate).toHaveBeenCalledWith({ to: "/menuitemreviews" });
 
       expect(axiosMock.history.put.length).toBe(1); // times called
       expect(axiosMock.history.put[0].params).toEqual({ id: 17 });
@@ -241,7 +241,7 @@ describe("MenuItemReviewEditPage tests", () => {
       expect(mockToast).toHaveBeenCalledWith(
         "MenuItemReview Updated - id: 17 itemId: 1 reviewerEmail: test@example.com stars: 5 comments: Great food! dateReviewed: 2023-01-01T00:00",
       );
-      expect(mockNavigate).toHaveBeenCalledWith({ to: "/menu-item-reviews" });
+      expect(mockNavigate).toHaveBeenCalledWith({ to: "/menuitemreviews" });
     });
   });
 });
