@@ -213,7 +213,6 @@ describe("AppNavbar tests", () => {
   });
 
   test("renders the RecommendationRequest link correctly", async () => {
-  test("renders the UCSBOrganization link correctly", async () => {
     const currentUser = currentUserFixtures.userOnly;
     const systemInfo = systemInfoFixtures.showingBoth;
 
@@ -225,7 +224,6 @@ describe("AppNavbar tests", () => {
             systemInfo={systemInfo}
             doLogout={vi.fn()}
           />
-          <AppNavbar currentUser={currentUser} systemInfo={systemInfo} />
         </MemoryRouter>
       </QueryClientProvider>,
     );
@@ -233,6 +231,20 @@ describe("AppNavbar tests", () => {
     const link = await screen.findByText("RecommendationRequest");
     expect(link).toBeInTheDocument();
     expect(link.getAttribute("href")).toBe("/recommendationrequest");
+  });
+
+  test("renders the UCSBOrganization link correctly", async () => {
+    const currentUser = currentUserFixtures.userOnly;
+    const systemInfo = systemInfoFixtures.showingBoth;
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AppNavbar currentUser={currentUser} systemInfo={systemInfo} />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
     const link = await screen.findByRole("link", {
       name: "UCSBOrganization",
     });
