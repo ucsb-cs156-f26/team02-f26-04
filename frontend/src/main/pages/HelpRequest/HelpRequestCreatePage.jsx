@@ -43,7 +43,12 @@ export default function HelpRequestCreatePage({ storybook = false }) {
     <BasicLayout>
       <div className="pt-2">
         <h1>Create Help Request</h1>
-        <HelpRequestForm submitAction={onSubmit} />
+        <HelpRequestForm
+          submitAction={onSubmit}
+          requesterEmailRequiredMessage="Requester email is required."
+          tableOrBreakoutRoomRequiredMessage="Table or breakout room is required."
+          requestTimeRequiredMessage="Request time is required."
+        />
       </div>
     </BasicLayout>
   );
