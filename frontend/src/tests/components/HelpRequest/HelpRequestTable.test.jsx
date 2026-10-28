@@ -2,26 +2,25 @@ import { render, screen } from "@testing-library/react";
 import HelpRequestTable from "main/components/HelpRequest/HelpRequestTable";
 import { MemoryRouter } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MemoryRouter } from "react-router";
 
 describe("HelpRequestTable tests", () => {
   const testId = "HelpRequestTable";
   const renderTable = (helpRequests) => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: { retry: false },
-      mutations: { retry: false },
-    },
-  });
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
+    });
 
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <MemoryRouter>
-        <HelpRequestTable helpRequests={helpRequests} />
-      </MemoryRouter>
-    </QueryClientProvider>,
-  );
-};
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <HelpRequestTable helpRequests={helpRequests} />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+  };
   const expectedHeaders = [
     "ID",
     "Requester Email",
