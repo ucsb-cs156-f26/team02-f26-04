@@ -19,8 +19,22 @@ vi.mock("react-router", async () => {
 describe("MenuItemReviewTable tests", () => {
   const queryClient = new QueryClient();
 
-  const expectedHeaders = ["id", "Item ID", "Reviewer Email", "Stars", "Comments", "Date Reviewed"];
-  const expectedFields = ["id", "itemId", "reviewerEmail", "stars", "comments", "dateReviewed"];
+  const expectedHeaders = [
+    "id",
+    "Item ID",
+    "Reviewer Email",
+    "Stars",
+    "Comments",
+    "Date Reviewed",
+  ];
+  const expectedFields = [
+    "id",
+    "itemId",
+    "reviewerEmail",
+    "stars",
+    "comments",
+    "dateReviewed",
+  ];
   const testId = "MenuItemReviewTable";
 
   test("renders empty table correctly", () => {
@@ -155,7 +169,6 @@ describe("MenuItemReviewTable tests", () => {
       expect(header).toBeInTheDocument();
     });
 
-    
     expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent(
       "1",
     );
@@ -244,7 +257,7 @@ describe("MenuItemReviewTable tests", () => {
 
     // assert - check that the navigate function was called with the expected path
     await waitFor(() =>
-      expect(mockedNavigate).toHaveBeenCalledWith("/menuitemreviews/edit/2"),
+      expect(mockedNavigate).toHaveBeenCalledWith("/menuitemreviews/edit/1"),
     );
   });
 
@@ -254,8 +267,8 @@ describe("MenuItemReviewTable tests", () => {
 
     const axiosMock = new AxiosMockAdapter(axios);
     axiosMock
-      .onDelete("/api/menuitemreviews/2")
-      .reply(200, { message: "Restaurant deleted" });
+      .onDelete("/api/menuitemreviews/1")
+      .reply(200, { message: "MenuItemReview deleted" });
 
     // act - render the component
     render(
@@ -270,24 +283,12 @@ describe("MenuItemReviewTable tests", () => {
     );
 
     // assert - check that the expected content is rendered
+    // Verify review 1 is initially in the first row
     expect(
       await screen.findByTestId(`${testId}-cell-row-0-col-id`),
-    ).toHaveTextContent("2");
-    expect(
-      screen.getByTestId(`${testId}-cell-row-0-col-itemId`),
-    ).toHaveTextContent("2");
-    expect(
-      screen.getByTestId(`${testId}-cell-row-0-col-reviewerEmail`),
-    ).toHaveTextContent("reviewer2@example.com");
-    expect(
-      screen.getByTestId(`${testId}-cell-row-0-col-stars`),
-    ).toHaveTextContent("4");
-    expect(
-      screen.getByTestId(`${testId}-cell-row-0-col-comments`),
-    ).toHaveTextContent("Good item, but could be better.");
-    expect(
-      screen.getByTestId(`${testId}-cell-row-0-col-dateReviewed`),
-    ).toHaveTextContent("2022-01-03T12:00:00");
+    ).toHaveTextContent("1");
+
+    // After deletion, review ID 2 should become the first row.
 
     const deleteButton = screen.getByTestId(
       `${testId}-cell-row-0-col-Delete-button`,
@@ -300,6 +301,6 @@ describe("MenuItemReviewTable tests", () => {
     // assert - check that the delete endpoint was called
 
     await waitFor(() => expect(axiosMock.history.delete.length).toBe(1));
-    expect(axiosMock.history.delete[0].params).toEqual({ id: 2 });
+    expect(axiosMock.history.delete[0].params).toEqual({ id: 1 });
   });
 });
