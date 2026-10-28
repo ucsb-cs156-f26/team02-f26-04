@@ -24,9 +24,14 @@ function HelpRequestForm({
         : {}),
     },
   });
+  // Stryker restore all
 
   const navigate = useNavigate();
   const testIdPrefix = "HelpRequestForm";
+
+  // Stryker disable Regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Stryker restore Regex
 
   return (
     <Form noValidate onSubmit={handleSubmit(submitAction)}>
@@ -102,6 +107,7 @@ function HelpRequestForm({
           id="requestTime"
           data-testid={`${testIdPrefix}-requestTime`}
           type="datetime-local"
+          step="1"
           isInvalid={Boolean(errors.requestTime)}
           {...register("requestTime", {
             required: requestTimeRequiredMessage,
