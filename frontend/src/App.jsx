@@ -65,7 +65,11 @@ function App() {
       )}
       {hasRole(currentUser, "ROLE_USER") && (
         <>
-          <Route exact path="/menu-item-reviews" element={<MenuItemReviewIndexPage />} />
+          <Route
+            exact
+            path="/menu-item-reviews"
+            element={<MenuItemReviewIndexPage />}
+          />
         </>
       )}
       {hasRole(currentUser, "ROLE_ADMIN") && (
@@ -82,7 +86,7 @@ function App() {
           />
         </>
       )}
-      
+
       {hasRole(currentUser, "ROLE_USER") && (
         <>
           <Route exact path="/restaurants" element={<RestaurantIndexPage />} />
