@@ -212,6 +212,26 @@ describe("AppNavbar tests", () => {
     expect(link).toHaveAttribute("href", "/helprequest");
   });
 
+  test("renders the UCSBOrganization link correctly", async () => {
+    const currentUser = currentUserFixtures.userOnly;
+    const systemInfo = systemInfoFixtures.showingBoth;
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AppNavbar currentUser={currentUser} systemInfo={systemInfo} />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    const link = await screen.findByRole("link", {
+      name: "UCSBOrganization",
+    });
+
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/ucsborganization");
+  });
+
   test("Restaurant and UCSBDates links do NOT show when not logged in", async () => {
     const currentUser = null;
     const systemInfo = systemInfoFixtures.showingBoth;
