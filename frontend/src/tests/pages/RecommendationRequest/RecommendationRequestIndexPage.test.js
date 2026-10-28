@@ -61,7 +61,7 @@ describe("RecommendationRequestIndexPage tests", () => {
     render(
       React.createElement(
         QueryClientProvider,
-        { client: new QueryClient() },
+        { client: queryClient },
         React.createElement(
           MemoryRouter,
           { initialEntries },
