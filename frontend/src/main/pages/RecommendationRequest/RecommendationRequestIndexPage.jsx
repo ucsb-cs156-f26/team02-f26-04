@@ -15,6 +15,7 @@ export default function RecommendationRequestIndexPage() {
   } = useBackend(
     // Stryker disable next-line all : don't test internal caching of React Query
     ["/api/recommendationrequests/all"],
+    // Stryker disable next-line StringLiteral : Axios normalizes an empty method to GET, making this mutation equivalent
     { method: "GET", url: "/api/recommendationrequests/all" },
     [],
   );
