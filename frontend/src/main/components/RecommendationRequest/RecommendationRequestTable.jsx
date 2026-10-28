@@ -70,7 +70,6 @@ export default function RecommendationRequestTable({
       data={recommendationRequests}
       columns={columns}
       testid={testIdPrefix}
-      testid="RecommendationRequestTable"
     />
   );
 }

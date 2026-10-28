@@ -216,7 +216,7 @@ describe("AppNavbar tests", () => {
     expect(link).toHaveAttribute("href", "/helprequest");
   });
 
-  test("renders the RecommendationRequest link correctly", async () => {
+  test("renders the RecommendationRequest link when doLogout is provided", async () => {
     const currentUser = currentUserFixtures.userOnly;
     const systemInfo = systemInfoFixtures.showingBoth;
 
@@ -281,7 +281,7 @@ describe("AppNavbar tests", () => {
     expect(link.getAttribute("href")).toBe("/articles");
   });
 
-  test("renders the RecommendationRequest link correctly", async () => {
+  test("renders the RecommendationRequest link when doLogin is provided", async () => {
     const currentUser = currentUserFixtures.userOnly;
     const systemInfo = systemInfoFixtures.showingBoth;
 
