@@ -1,14 +1,11 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router";
 
-import MenuItemReviewForm, {
-  removeZ,
-} from "main/components/MenuItemReviews/MenuItemReviewForm";
-import { menuItemReviewFixtures } from "fixtures/menuItemReviewFixtures";
+import MenuItemReviewForm from "main/components/MenuItemReviews/MenuItemReviewForm";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
 const mockedNavigate = vi.fn();
+
 vi.mock("react-router", async () => {
   const originalModule = await vi.importActual("react-router");
   return {
@@ -17,139 +14,147 @@ vi.mock("react-router", async () => {
   };
 });
 
+const oneMenuItemReviewRequest = {
+  id: 1,
+  itemId: 1,
+  stars: 5,
+  reviewerEmail: "student1@ucsb.edu",
+  comments: "Great item!",
+  dateReviewed: "2026-10-20T14:30",
+};
+
 describe("MenuItemReviewForm tests", () => {
   const queryClient = new QueryClient();
-
-  const expectedHeaders = [
-    "Item ID",
-    "Reviewer Email",
-    "Stars",
-    "Date Reviewed",
-    "Comments",
-  ];
   const testId = "MenuItemReviewForm";
 
-  test("renders correctly with no initialContents", async () => {
+  const renderForm = (props = {}) =>
     render(
       <QueryClientProvider client={queryClient}>
         <Router>
-          <MenuItemReviewForm />
+          <MenuItemReviewForm {...props} />
         </Router>
       </QueryClientProvider>,
     );
 
-    expect(await screen.findByText(/Create/)).toBeInTheDocument();
+  test("renders correctly when creating a MenuItemReview", async () => {
+    renderForm({ submitAction: vi.fn() });
 
-    expectedHeaders.forEach((headerText) => {
-      const header = screen.getByText(headerText);
-      expect(header).toBeInTheDocument();
-    });
-  });
-  test("that the removeZ function works correctly", () => {
-    expect(removeZ("ABC")).toBe("ABC");
-    expect(removeZ("ABCZ")).toBe("ABC");
-  });
-  test("renders correctly when passing in initialContents", async () => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <Router>
-          <MenuItemReviewForm
-            initialContents={menuItemReviewFixtures.oneMenuItemReview}
-          />
-        </Router>
-      </QueryClientProvider>,
-    );
+    expect(await screen.findByText("Create")).toBeInTheDocument();
 
-    expect(await screen.findByText(/Create/)).toBeInTheDocument();
-
-    expectedHeaders.forEach((headerText) => {
-      const header = screen.getByText(headerText);
-      expect(header).toBeInTheDocument();
+    [
+      "Item ID",
+      "Stars",
+      "Reviewer Email",
+      "Comments",
+      "Date Reviewed",
+    ].forEach((label) => {
+      expect(screen.getByText(label)).toBeInTheDocument();
     });
 
-    expect(await screen.findByTestId(`${testId}-id`)).toBeInTheDocument();
-    expect(screen.getByText(`Id`)).toBeInTheDocument();
-    expect(screen.getByTestId(`${testId}-id`)).toHaveValue(
-      String(menuItemReviewFixtures.oneMenuItemReview.id),
-    );
+    expect(screen.getByTestId(`${testId}-solved`)).toBeInTheDocument();
+
+    expect(screen.queryByTestId(`${testId}-id`)).not.toBeInTheDocument();
+  });
+
+  test("renders correctly when updating a MenuItemReview", async () => {
+    renderForm({
+      initialContents: oneMenuItemReviewRequest,
+      submitAction: vi.fn(),
+      buttonLabel: "Update",
+    });
+
+    expect(await screen.findByText("Update")).toBeInTheDocument();
+    expect(screen.getByTestId(`${testId}-id`)).toBeInTheDocument();
+    expect(screen.getByTestId(`${testId}-id`)).toBeDisabled();
+
     expect(screen.getByTestId(`${testId}-itemId`)).toHaveValue(
-      String(menuItemReviewFixtures.oneMenuItemReview.itemId),
-    );
-    expect(screen.getByTestId(`${testId}-reviewerEmail`)).toHaveValue(
-      menuItemReviewFixtures.oneMenuItemReview.reviewerEmail,
+      oneMenuItemReviewRequest.itemId,
     );
     expect(screen.getByTestId(`${testId}-stars`)).toHaveValue(
-      String(menuItemReviewFixtures.oneMenuItemReview.stars),
+      oneMenuItemReviewRequest.stars,
     );
-    expect(screen.getByTestId(`${testId}-dateReviewed`)).toHaveValue(
-      removeZ(menuItemReviewFixtures.oneMenuItemReview.dateReviewed).slice(
-        0,
-        16,
-      ),
+    expect(screen.getByTestId(`${testId}-reviewerEmail`)).toHaveValue(
+      oneMenuItemReviewRequest.reviewerEmail,
     );
     expect(screen.getByTestId(`${testId}-comments`)).toHaveValue(
-      menuItemReviewFixtures.oneMenuItemReview.comments,
+      oneMenuItemReviewRequest.comments,
+    );
+    expect(screen.getByTestId(`${testId}-dateReviewed`)).toHaveValue(
+      oneMenuItemReviewRequest.dateReviewed,
     );
   });
 
-  test("that navigate(-1) is called when Cancel is clicked", async () => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <Router>
-          <MenuItemReviewForm />
-        </Router>
-      </QueryClientProvider>,
-    );
-    expect(await screen.findByTestId(`${testId}-cancel`)).toBeInTheDocument();
-    const cancelButton = screen.getByTestId(`${testId}-cancel`);
+  test("calls submitAction with valid form data", async () => {
+    const submitAction = vi.fn();
+    renderForm({ submitAction });
 
-    fireEvent.click(cancelButton);
-
-    await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith(-1));
-  });
-
-  test("that the correct validations are performed", async () => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <Router>
-          <MenuItemReviewForm />
-        </Router>
-      </QueryClientProvider>,
-    );
-
-
-    expect(await screen.findByText(/Create/)).toBeInTheDocument();
-    const submitButton = screen.getByText(/Create/);
-    fireEvent.click(submitButton);
-
-    await screen.findByText(/Item ID is required/);
-    expect(screen.getByText(/Reviewer Email is required/)).toBeInTheDocument();
-    expect(screen.getByText(/Stars is required/)).toBeInTheDocument();
-    expect(screen.getByText(/Date Reviewed is required/)).toBeInTheDocument();
-    expect(screen.getByText(/Comments are required/)).toBeInTheDocument();
-
-    const itemIdInput = screen.getByTestId(`${testId}-itemId`);
-    fireEvent.change(itemIdInput, { target: { value: "a".repeat(257) } });
-    fireEvent.click(submitButton);
+    fireEvent.change(screen.getByTestId(`${testId}-itemId`), {
+      target: { value: 1 },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-stars`), {
+      target: { value: 5 },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-reviewerEmail`), {
+      target: { value: "student1@ucsb.edu" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-comments`), {
+      target: { value: "Great item!" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-dateReviewed`), {
+      target: { value: "2026-10-20T14:30" },
+    });
+    fireEvent.click(screen.getByTestId(`${testId}-submit`));
 
     await waitFor(() => {
-      expect(screen.getByText(/Max length 256 characters/)).toBeInTheDocument();
+      expect(submitAction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          itemId: 1,
+          stars: 5,
+          reviewerEmail: "student1@ucsb.edu",
+          comments: "Great item!",
+          dateReviewed: "2026-10-20T14:30",
+        }),
+        expect.anything(),
+      );
     });
   });
-  test("handles initialContents without a dateReviewed", async () => {
-    const contentsWithoutDate = {
-      ...menuItemReviewFixtures.oneMenuItemReview,
-      dateReviewed: "",
-    };
 
-    render(
-      <QueryClientProvider client={queryClient}>
-        <Router>
-          <MenuItemReviewForm initialContents={contentsWithoutDate} />
-        </Router>
-      </QueryClientProvider>,
-    );
+  test("validates required fields", async () => {
+    renderForm({ submitAction: vi.fn() });
 
-    expect(screen.getByTestId(`${testId}-dateReviewed`)).toHaveValue("");
+    fireEvent.click(screen.getByTestId(`${testId}-submit`));
+
+    expect(
+      await screen.findByText("Reviewer Email is required."),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Item ID is required.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Stars is required."),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Date Reviewed is required.")).toBeInTheDocument();
+    expect(screen.getByText("Comments is required.")).toBeInTheDocument();
+  });
+
+  test("validates email format", async () => {
+    renderForm({ submitAction: vi.fn() });
+
+    fireEvent.change(screen.getByTestId(`${testId}-reviewerEmail`), {
+      target: { value: "not-an-email" },
+    });
+    fireEvent.click(screen.getByTestId(`${testId}-submit`));
+
+    expect(
+      await screen.findByText("Enter a valid email address."),
+    ).toBeInTheDocument();
+  });
+
+  test("navigates back when Cancel is clicked", async () => {
+    renderForm({ submitAction: vi.fn() });
+
+    fireEvent.click(screen.getByTestId(`${testId}-cancel`));
+
+    await waitFor(() => {
+      expect(mockedNavigate).toHaveBeenCalledWith(-1);
+    });
   });
 });

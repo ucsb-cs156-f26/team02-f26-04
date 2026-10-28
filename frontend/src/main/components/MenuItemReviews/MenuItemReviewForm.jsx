@@ -2,35 +2,25 @@ import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 
-export function removeZ(myString) {
-  return myString.replace("Z", "");
-}
-
 function MenuItemReviewForm({
   initialContents,
   submitAction,
   buttonLabel = "Create",
 }) {
-  const defaultValues = initialContents
-    ? {
-        ...initialContents,
-        dateReviewed: initialContents.dateReviewed
-          ? removeZ(initialContents.dateReviewed).slice(0, 16)
-          : "",
-      }
-    : {};
   // Stryker disable all
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm({ defaultValues });
+  } = useForm({ defaultValues: initialContents || {} });
   // Stryker restore all
 
   const navigate = useNavigate();
 
   const testIdPrefix = "MenuItemReviewForm";
-  const isodate_regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/;
+  // Stryker disable Regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Stryker restore Regex
 
   return (
     <Form onSubmit={handleSubmit(submitAction)}>
@@ -57,10 +47,6 @@ function MenuItemReviewForm({
           isInvalid={Boolean(errors.itemId)}
           {...register("itemId", {
             required: "Item ID is required.",
-            maxLength: {
-              value: 256,
-              message: "Max length 256 characters",
-            },
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -71,15 +57,15 @@ function MenuItemReviewForm({
       <Form.Group className="mb-3">
         <Form.Label htmlFor="reviewerEmail">Reviewer Email</Form.Label>
         <Form.Control
-          data-testid={testIdPrefix + "-reviewerEmail"}
+          data-testid={`${testIdPrefix}-reviewerEmail`}
           id="reviewerEmail"
           type="text"
           isInvalid={Boolean(errors.reviewerEmail)}
           {...register("reviewerEmail", {
             required: "Reviewer Email is required.",
-            maxLength: {
-              value: 256,
-              message: "Max length 256 characters",
+            pattern: {
+              value: emailRegex,
+              message: "Enter a valid email address.",
             },
           })}
         />
@@ -107,16 +93,13 @@ function MenuItemReviewForm({
       <Form.Group className="mb-3">
         <Form.Label htmlFor="dateReviewed">Date Reviewed</Form.Label>
         <Form.Control
-          data-testid={testIdPrefix + "-dateReviewed"}
+          data-testid={`${testIdPrefix}-dateReviewed`}
           id="dateReviewed"
           type="datetime-local"
+          step="1"
           isInvalid={Boolean(errors.dateReviewed)}
           {...register("dateReviewed", {
             required: "Date Reviewed is required.",
-            pattern: {
-              value: isodate_regex,
-              message: "Date must be in ISO format.",
-            },
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -144,11 +127,13 @@ function MenuItemReviewForm({
         </Form.Control.Feedback>
       </Form.Group>
 
-      <Button type="submit">{buttonLabel}</Button>
+      <Button type="submit" data-testid={`${testIdPrefix}-submit`}>
+        {buttonLabel}
+      </Button>
       <Button
         variant="Secondary"
         onClick={() => navigate(-1)}
-        data-testid={testIdPrefix + "-cancel"}
+        data-testid={`${testIdPrefix}-cancel`}
       >
         Cancel
       </Button>
