@@ -32,7 +32,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
@@ -216,7 +216,13 @@
 <a name='L151'></a><a href='#L151'>151</a>
 <a name='L152'></a><a href='#L152'>152</a>
 <a name='L153'></a><a href='#L153'>153</a>
-<a name='L154'></a><a href='#L154'>154</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -230,29 +236,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">47x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">47x</span>
+<span class="cline-any cline-yes">47x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">47x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">47x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -359,7 +365,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -372,11 +384,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import { helpRequestDefaultValues } from "main/components/HelpRequest/HelpRequestFormDefaults";
 &nbsp;
 function HelpRequestForm({
   initialContents,
   submitAction,
   buttonLabel = "Create",
+  requesterEmailRequiredMessage = "Requester Email is required.",
+  tableOrBreakoutRoomRequiredMessage = "Table or breakout room is required.",
+  requestTimeRequiredMessage = "Request time is required.",
 }) {
   // Stryker disable all
   const {
@@ -384,12 +400,13 @@ function HelpRequestForm({
     formState: { errors },
     handleSubmit,
   } = useForm({
-    defaultValues: initialContents
-      ? {
-          ...initialContents,
-          requestTime: initialContents.requestTime?.slice(0, 16) || "",
-        }
-      : { solved: false },
+    defaultValues: {
+      ...helpRequestDefaultValues,
+      ...(initialContents || {}),
+      ...(initialContents
+        ? { requestTime: initialContents.requestTime?.slice(0, 16) || "" }
+        : {}),
+    },
   });
   // Stryker restore all
 &nbsp;
@@ -401,7 +418,7 @@ function HelpRequestForm({
   // Stryker restore Regex
 &nbsp;
   return (
-    &lt;Form onSubmit={handleSubmit(submitAction)}&gt;
+    &lt;Form noValidate onSubmit={handleSubmit(submitAction)}&gt;
       {initialContents &amp;&amp; (
         &lt;Form.Group className="mb-3"&gt;
           &lt;Form.Label htmlFor="id"&gt;ID&lt;/Form.Label&gt;
@@ -418,12 +435,12 @@ function HelpRequestForm({
       &lt;Form.Group className="mb-3"&gt;
         &lt;Form.Label htmlFor="requesterEmail"&gt;Requester Email&lt;/Form.Label&gt;
         &lt;Form.Control
-          data-testid={`${testIdPrefix}-requesterEmail`}
           id="requesterEmail"
-          type="text"
+          data-testid={`${testIdPrefix}-requesterEmail`}
+          type="email"
           isInvalid={Boolean(errors.requesterEmail)}
           {...register("requesterEmail", {
-            required: "Requester Email is required.",
+            required: requesterEmailRequiredMessage,
             pattern: {
               value: emailRegex,
               message: "Enter a valid email address.",
@@ -437,8 +454,8 @@ function HelpRequestForm({
       &lt;Form.Group className="mb-3"&gt;
         &lt;Form.Label htmlFor="teamId"&gt;Team ID&lt;/Form.Label&gt;
         &lt;Form.Control
-          data-testid={`${testIdPrefix}-teamId`}
           id="teamId"
+          data-testid={`${testIdPrefix}-teamId`}
           type="text"
           isInvalid={Boolean(errors.teamId)}
           {...register("teamId", {
@@ -454,12 +471,12 @@ function HelpRequestForm({
           Table or Breakout Room
         &lt;/Form.Label&gt;
         &lt;Form.Control
-          data-testid={`${testIdPrefix}-tableOrBreakoutRoom`}
           id="tableOrBreakoutRoom"
+          data-testid={`${testIdPrefix}-tableOrBreakoutRoom`}
           type="text"
           isInvalid={Boolean(errors.tableOrBreakoutRoom)}
           {...register("tableOrBreakoutRoom", {
-            required: "Table or breakout room is required.",
+            required: tableOrBreakoutRoomRequiredMessage,
           })}
         /&gt;
         &lt;Form.Control.Feedback type="invalid"&gt;
@@ -469,12 +486,12 @@ function HelpRequestForm({
       &lt;Form.Group className="mb-3"&gt;
         &lt;Form.Label htmlFor="requestTime"&gt;Request Time&lt;/Form.Label&gt;
         &lt;Form.Control
-          data-testid={`${testIdPrefix}-requestTime`}
           id="requestTime"
+          data-testid={`${testIdPrefix}-requestTime`}
           type="datetime-local"
           isInvalid={Boolean(errors.requestTime)}
           {...register("requestTime", {
-            required: "Request time is required.",
+            required: requestTimeRequiredMessage,
           })}
         /&gt;
         &lt;Form.Control.Feedback type="invalid"&gt;
@@ -484,8 +501,8 @@ function HelpRequestForm({
       &lt;Form.Group className="mb-3"&gt;
         &lt;Form.Label htmlFor="explanation"&gt;Explanation&lt;/Form.Label&gt;
         &lt;Form.Control
-          data-testid={`${testIdPrefix}-explanation`}
           id="explanation"
+          data-testid={`${testIdPrefix}-explanation`}
           as="textarea"
           rows={3}
           isInvalid={Boolean(errors.explanation)}
@@ -499,8 +516,8 @@ function HelpRequestForm({
       &lt;/Form.Group&gt;
       &lt;Form.Group className="mb-3"&gt;
         &lt;Form.Check
-          data-testid={`${testIdPrefix}-solved`}
           id="solved"
+          data-testid={`${testIdPrefix}-solved`}
           type="checkbox"
           label="Solved"
           {...register("solved")}
@@ -509,9 +526,10 @@ function HelpRequestForm({
       &lt;Button type="submit" data-testid={`${testIdPrefix}-submit`}&gt;
         {buttonLabel}
       &lt;/Button&gt;
+&nbsp;
       &lt;Button
-        variant="secondary"
         type="button"
+        variant="secondary"
         onClick={() =&gt; navigate(-1)}
         data-testid={`${testIdPrefix}-cancel`}
       &gt;
@@ -529,7 +547,7 @@ export default HelpRequestForm;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-10-28T04:16:18.229Z
+                at 2026-10-28T17:05:51.552Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
