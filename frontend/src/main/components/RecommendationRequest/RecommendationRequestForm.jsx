@@ -96,7 +96,7 @@ function RecommendationRequestForm({
           {...register("explanation", {
             required: "Explanation is required.",
             validate: (value) =>
-              value.trim().length > 0 || "Explanation is required.",
+              value.trim().length > 0 || "Explanation cannot be blank.",
           })}
         />
         <Form.Control.Feedback type="invalid">

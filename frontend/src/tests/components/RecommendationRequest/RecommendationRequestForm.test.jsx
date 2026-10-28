@@ -20,6 +20,10 @@ describe("RecommendationRequestForm tests", () => {
       </MemoryRouter>,
     );
 
+    expect(
+      screen.getByTestId("RecommendationRequestForm-submit"),
+    ).toHaveTextContent("Create");
+
     fireEvent.submit(
       screen.getByTestId("RecommendationRequestForm-submit").closest("form"),
     );
@@ -33,6 +37,32 @@ describe("RecommendationRequestForm tests", () => {
     expect(screen.getByText("Explanation is required.")).toBeInTheDocument();
     expect(screen.getByText("Date requested is required.")).toBeInTheDocument();
     expect(screen.getByText("Date needed is required.")).toBeInTheDocument();
+  });
+
+  test.each([
+    ["requesterEmail", "@student@example.com"],
+    ["requesterEmail", "student@example.com@"],
+    ["professorEmail", "@professor@example.com"],
+    ["professorEmail", "professor@example.com@"],
+  ])("rejects malformed %s value %s", async (field, value) => {
+    render(
+      <MemoryRouter>
+        <RecommendationRequestForm />
+      </MemoryRouter>,
+    );
+
+    fireEvent.change(screen.getByTestId(`RecommendationRequestForm-${field}`), {
+      target: { value },
+    });
+    fireEvent.submit(
+      screen.getByTestId("RecommendationRequestForm-submit").closest("form"),
+    );
+
+    const errorMessage =
+      field === "requesterEmail"
+        ? "Enter a valid email address."
+        : "Enter a valid professor email address.";
+    expect(await screen.findByText(errorMessage)).toBeInTheDocument();
   });
 
   test("validates email formats and non-blank explanation", async () => {
@@ -64,7 +94,9 @@ describe("RecommendationRequestForm tests", () => {
     expect(
       screen.getByText("Enter a valid professor email address."),
     ).toBeInTheDocument();
-    expect(screen.getByText("Explanation is required.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Explanation cannot be blank."),
+    ).toBeInTheDocument();
   });
 
   test("requires date needed to be later than date requested", async () => {
