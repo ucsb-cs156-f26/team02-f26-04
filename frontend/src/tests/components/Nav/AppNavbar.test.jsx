@@ -209,14 +209,14 @@ describe("AppNavbar tests", () => {
     );
 
     const link = await screen.findByRole("link", {
-      name: "HelpRequest",
+      name: "Help Requests",
     });
 
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/helprequest");
   });
 
-  test("also renders the RecommendationRequest link correctly", async () => {
+  test("renders the RecommendationRequest link when doLogout is provided", async () => {
     const currentUser = currentUserFixtures.userOnly;
     const systemInfo = systemInfoFixtures.showingBoth;
 
@@ -257,27 +257,6 @@ describe("AppNavbar tests", () => {
     expect(link).toHaveAttribute("href", "/ucsborganization");
   });
 
-  test("renders the RecommendationRequest link when doLogout is provided", async () => {
-    const currentUser = currentUserFixtures.userOnly;
-    const systemInfo = systemInfoFixtures.showingBoth;
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <AppNavbar
-            currentUser={currentUser}
-            systemInfo={systemInfo}
-            doLogout={vi.fn()}
-          />
-        </MemoryRouter>
-      </QueryClientProvider>,
-    );
-
-    const link = await screen.findByText("RecommendationRequest");
-    expect(link).toBeInTheDocument();
-    expect(link.getAttribute("href")).toBe("/recommendationrequest");
-  });
-
   test("renders the articles link correctly", async () => {
     const currentUser = currentUserFixtures.userOnly;
     const systemInfo = systemInfoFixtures.showingBoth;
@@ -302,6 +281,48 @@ describe("AppNavbar tests", () => {
     expect(link.getAttribute("href")).toBe("/articles");
   });
 
+  test("also renders the RecommendationRequest link correctly", async () => {
+    const currentUser = currentUserFixtures.userOnly;
+    const systemInfo = systemInfoFixtures.showingBoth;
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AppNavbar
+            currentUser={currentUser}
+            systemInfo={systemInfo}
+            doLogout={vi.fn()}
+          />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    const link = await screen.findByText("RecommendationRequest");
+    expect(link).toBeInTheDocument();
+    expect(link.getAttribute("href")).toBe("/recommendationrequest");
+  });
+
+  test("renders the RecommendationRequest link when doLogin is provided", async () => {
+    const currentUser = currentUserFixtures.userOnly;
+    const systemInfo = systemInfoFixtures.showingBoth;
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AppNavbar
+            currentUser={currentUser}
+            systemInfo={systemInfo}
+            doLogin={doLogin}
+          />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    const link = await screen.findByText("RecommendationRequest");
+    expect(link).toBeInTheDocument();
+    expect(link.getAttribute("href")).toBe("/recommendationrequest");
+  });
+
   test("Restaurant, Articles and UCSBDates links do NOT show when not logged in", async () => {
     const currentUser = null;
     const systemInfo = systemInfoFixtures.showingBoth;
@@ -321,6 +342,7 @@ describe("AppNavbar tests", () => {
 
     expect(screen.queryByText("Restaurants")).not.toBeInTheDocument();
     expect(screen.queryByText("UCSBDates")).not.toBeInTheDocument();
+    expect(screen.queryByText("Articles")).not.toBeInTheDocument();
     // Logged-out users should not see the menu item link.
     expect(
       screen.queryByRole("link", { name: "UCSBDiningCommonsMenuItem" }),
