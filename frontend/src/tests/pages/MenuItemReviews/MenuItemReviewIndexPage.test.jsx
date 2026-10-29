@@ -20,6 +20,10 @@ vi.mock("react-toastify", async (importOriginal) => {
 });
 
 describe("MenuItemReviewIndexPage tests", () => {
+  beforeEach(() => {
+    mockToast.mockClear();
+  });
+
   const axiosMock = new AxiosMockAdapter(axios);
 
   const testId = "MenuItemReviewTable";
