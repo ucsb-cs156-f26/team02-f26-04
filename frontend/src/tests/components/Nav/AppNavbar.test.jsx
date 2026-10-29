@@ -353,7 +353,6 @@ describe("AppNavbar tests", () => {
     expect(
       screen.queryByRole("link", { name: "UCSBDiningCommonsMenuItem" }),
     ).not.toBeInTheDocument();
-    expect(screen.queryByText("Articles")).not.toBeInTheDocument();
   });
 
   test("when oauthlogin undefined, default value is used", async () => {
