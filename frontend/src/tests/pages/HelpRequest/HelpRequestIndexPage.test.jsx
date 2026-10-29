@@ -29,6 +29,7 @@ vi.mock("react-router", async (importOriginal) => {
     useNavigate: () => mockNavigate,
   };
 });
+
 describe("HelpRequestIndexPage tests", () => {
   const axiosMock = new AxiosMockAdapter(axios);
   const testId = "HelpRequestTable";

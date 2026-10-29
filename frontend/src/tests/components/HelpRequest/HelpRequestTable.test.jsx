@@ -3,8 +3,6 @@ import { MemoryRouter } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import HelpRequestTable from "main/components/HelpRequest/HelpRequestTable";
-import { MemoryRouter } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 describe("HelpRequestTable tests", () => {
   const testId = "HelpRequestTable";
