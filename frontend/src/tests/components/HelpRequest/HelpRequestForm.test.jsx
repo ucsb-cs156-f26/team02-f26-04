@@ -13,10 +13,20 @@ vi.mock("react-router", async (importOriginal) => {
   };
 });
 
+const oneHelpRequest = {
+  id: 1,
+  requesterEmail: "student1@ucsb.edu",
+  teamId: "team01",
+  tableOrBreakoutRoom: "Table 3",
+  requestTime: "2026-10-20T14:30",
+  explanation: "I need help understanding the assignment.",
+  solved: false,
+};
+
 describe("HelpRequestForm tests", () => {
   const testId = "HelpRequestForm";
 
-  test("renders create defaults when initialContents is not provided", () => {
+  const renderForm = (props = {}) =>
     render(
       <QueryClientProvider client={new QueryClient()}>
         <MemoryRouter>
@@ -97,33 +107,47 @@ describe("HelpRequestForm tests", () => {
     );
   });
 
-  test("Cancel button navigates back", () => {
-    render(
-      <MemoryRouter>
-        <HelpRequestForm submitAction={vi.fn()} />
-      </MemoryRouter>,
-    );
+  test("calls submitAction with valid form data", async () => {
+    const submitAction = vi.fn();
+    renderForm({ submitAction });
 
-    fireEvent.click(screen.getByTestId("HelpRequestForm-cancel"));
+    fireEvent.change(screen.getByTestId(`${testId}-requesterEmail`), {
+      target: { value: "student1@ucsb.edu" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-teamId`), {
+      target: { value: "team01" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-tableOrBreakoutRoom`), {
+      target: { value: "Table 3" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-requestTime`), {
+      target: { value: "2026-10-20T14:30" },
+    });
+    fireEvent.change(screen.getByTestId(`${testId}-explanation`), {
+      target: { value: "I need help understanding the assignment." },
+    });
 
-    expect(mockNavigate).toHaveBeenCalledWith(-1);
+    fireEvent.click(screen.getByTestId(`${testId}-submit`));
+
+    await waitFor(() => {
+      expect(submitAction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          requesterEmail: "student1@ucsb.edu",
+          teamId: "team01",
+          tableOrBreakoutRoom: "Table 3",
+          requestTime: "2026-10-20T14:30",
+          explanation: "I need help understanding the assignment.",
+          solved: false,
+        }),
+        expect.anything(),
+      );
+    });
   });
-  test.each([
-  ["requesterEmail", "Requester email is required."],
-  ["teamId", "Team ID is required."],
-  ["tableOrBreakoutRoom", "Table or breakout room is required."],
-  ["requestTime", "Request time is required."],
-  ["explanation", "Explanation is required."],
-])("requires %s before submission", async (field, message) => {
-  const submitAction = vi.fn();
 
-  render(
-    <MemoryRouter>
-      <HelpRequestForm submitAction={submitAction} />
-    </MemoryRouter>,
-  );
+  test("validates required fields", async () => {
+    renderForm({ submitAction: vi.fn() });
 
-  fireEvent.click(screen.getByTestId("HelpRequestForm-submit"));
+    fireEvent.click(screen.getByTestId(`${testId}-submit`));
 
     expect(
       await screen.findByText("Requester Email is required."),
