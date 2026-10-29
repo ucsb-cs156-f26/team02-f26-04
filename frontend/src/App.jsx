@@ -77,7 +77,11 @@ function App() {
             element={<UCSBDiningCommonsMenuItemIndexPage />}
           />
           <Route exact path="/articles" element={<ArticlesIndexPage />} />
-          <Route exact path="/recommendationrequest" element={<RecommendationRequestIndexPage />} />
+          <Route
+            exact
+            path="/recommendationrequest"
+            element={<RecommendationRequestIndexPage />}
+          />
         </>
       )}
 
