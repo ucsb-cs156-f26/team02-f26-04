@@ -77,6 +77,7 @@ function App() {
             element={<UCSBDiningCommonsMenuItemIndexPage />}
           />
           <Route exact path="/articles" element={<ArticlesIndexPage />} />
+          <Route exact path="/recommendationrequest" element={<RecommendationRequestIndexPage />} />
         </>
       )}
 
@@ -230,26 +231,6 @@ function App() {
             exact
             path="/recommendationrequest/create"
             element={<RecommendationRequestCreatePage />}
-          />
-          <Route
-            exact
-            path="/helprequest/edit/:id"
-            element={<HelpRequestEditPage />}
-          />
-          <Route
-            exact
-            path="/helprequest/create"
-            element={<HelpRequestCreatePage />}
-          />
-          <Route
-            exact
-            path="/ucsborganization/edit/:id"
-            element={<UCSBOrganizationEditPage />}
-          />
-          <Route
-            exact
-            path="/ucsborganization/create"
-            element={<UCSBOrganizationCreatePage />}
           />
           <Route
             exact
