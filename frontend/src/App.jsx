@@ -180,10 +180,7 @@ function App() {
             path="/ucsborganization/create"
             element={<UCSBOrganizationCreatePage />}
           />
-          <Route
-            path="/articles/edit/:id"
-            element={<ArticlesEditPage />}
-          />
+          <Route path="/articles/edit/:id" element={<ArticlesEditPage />} />
           <Route
             exact
             path="/articles/create"
