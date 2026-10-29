@@ -7,7 +7,7 @@ export function onDeleteSuccess(message) {
 
 export function cellToAxiosParamsDelete(cell) {
   return {
-    url: "/api/menu-item-reviews",
+    url: "/api/menuitemreviews",
     method: "DELETE",
     params: {
       id: cell.row.original.id,
