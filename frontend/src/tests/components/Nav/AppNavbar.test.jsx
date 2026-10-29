@@ -196,6 +196,25 @@ describe("AppNavbar tests", () => {
     expect(link).toBeInTheDocument();
     expect(link.getAttribute("href")).toBe("/restaurants");
   });
+  test("renders the MenuItemReview link correctly", async () => {
+    const currentUser = currentUserFixtures.userOnly;
+    const systemInfo = systemInfoFixtures.showingBoth;
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AppNavbar currentUser={currentUser} systemInfo={systemInfo} />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    const link = await screen.findByRole("link", {
+      name: "Menu Item Reviews",
+    });
+
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/menuitemreviews");
+  });
   test("renders the HelpRequest link correctly", async () => {
     const currentUser = currentUserFixtures.userOnly;
     const systemInfo = systemInfoFixtures.showingBoth;

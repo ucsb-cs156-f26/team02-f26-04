@@ -80,10 +80,6 @@ function App() {
           />
         </>
       )}
-
-      {hasRole(currentUser, "ROLE_ADMIN") && (
-        <Route exact path="/admin/users" element={<AdminUsersPage />} />
-      )}
       {hasRole(currentUser, "ROLE_ADMIN") && (
         <>
           <Route exact path="/admin/users" element={<AdminUsersPage />} />
@@ -146,11 +142,6 @@ function App() {
           />
           <Route
             exact
-            path="/recommendationrequest/create"
-            element={<RecommendationRequestCreatePage />}
-          />
-          <Route
-            exact
             path="/helprequest/edit/:id"
             element={<HelpRequestEditPage />}
           />
@@ -189,6 +180,29 @@ function App() {
           />
           <Route
             exact
+            path="/articles/edit/:id"
+            element={<ArticlesEditPage />}
+          />
+          <Route
+            exact
+            path="/articles/create"
+            element={<ArticlesCreatePage />}
+          />
+        </>
+      )}
+      {hasRole(currentUser, "ROLE_ADMIN") && (
+        <>
+          <Route
+            exact
+            path="/recommendationrequest/create"
+            element={<RecommendationRequestCreatePage />}
+          />
+        </>
+      )}
+      {hasRole(currentUser, "ROLE_ADMIN") && (
+        <>
+          <Route
+            exact
             path="/placeholder/edit/:id"
             element={<PlaceholderEditPage />}
           />
@@ -206,16 +220,6 @@ function App() {
             exact
             path="/diningcommonsmenuitem/edit/:id"
             element={<UCSBDiningCommonsMenuItemEditPage />}
-          />
-          <Route
-            exact
-            path="/articles/edit/:id"
-            element={<ArticlesEditPage />}
-          />
-          <Route
-            exact
-            path="/articles/create"
-            element={<ArticlesCreatePage />}
           />
         </>
       )}
