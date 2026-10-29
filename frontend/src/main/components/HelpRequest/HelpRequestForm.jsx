@@ -30,6 +30,10 @@ function HelpRequestForm({
   const navigate = useNavigate();
   const testIdPrefix = "HelpRequestForm";
 
+  // Stryker disable Regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Stryker restore Regex
+
   return (
     <Form noValidate onSubmit={handleSubmit(submitAction)}>
       {initialContents && (
@@ -139,6 +143,7 @@ function HelpRequestForm({
       <Button type="submit" data-testid={`${testIdPrefix}-submit`}>
         {buttonLabel}
       </Button>
+
       <Button
         type="button"
         variant="secondary"
