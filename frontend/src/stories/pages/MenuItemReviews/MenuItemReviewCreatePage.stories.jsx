@@ -25,7 +25,7 @@ Default.parameters = {
         status: 200,
       });
     }),
-    http.post("/api/menu-item-reviews/post", () => {
+    http.post("/api/menuitemreviews/post", () => {
       return HttpResponse.json(
         {
           id: 1,
