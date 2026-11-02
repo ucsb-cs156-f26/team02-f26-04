@@ -48,7 +48,7 @@ public class MenuItemReviewIT {
 
   @MockitoBean UserRepository userRepository;
 
-  @WithMockUser(roles = {"USER"})
+  @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
   public void an_admin_user_can_post_a_new_menu_item_review() throws Exception {
     // arrange
