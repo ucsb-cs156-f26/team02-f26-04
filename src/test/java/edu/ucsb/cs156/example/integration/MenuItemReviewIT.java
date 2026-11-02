@@ -70,10 +70,10 @@ public class MenuItemReviewIT {
             .perform(
                 post("/api/menuitemreviews/post")
                     .param("reviewerEmail", "student@example.com")
-                    .param("itemId", "1")
+                    .param("itemId", 1L + "")
                     .param("comments", "Good Item!")
                     .param("dateReviewed", "2026-10-31T14:30:00")
-                    .param("stars", "4")
+                    .param("stars", 4 + "")
                     .with(csrf()))
             .andExpect(status().isOk())
             .andReturn();
@@ -85,9 +85,9 @@ public class MenuItemReviewIT {
 
     MenuItemReview saved = menuItemReviewRepository.findById(1L).orElseThrow();
     assertEquals("student@example.com", saved.getReviewerEmail());
-    assertEquals("1", saved.getItemId());
+    assertEquals(1L, saved.getItemId());
     assertEquals(requestTime, saved.getDateReviewed());
-    assertEquals("4", saved.getStars());
+    assertEquals(4, saved.getStars());
     assertEquals("Good Item!", saved.getComments());
   }
 }
